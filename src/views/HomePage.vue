@@ -46,14 +46,26 @@
       <div class="container">
         <h2 class="section-title">Featured Artists</h2>
         <div class="artists-grid">
-          <router-link v-for="artist in featuredArtists" :key="artist.id" :to="artist.link" class="artist-card">
-            <div class="artist-image">
-              <img :src="artist.image" :alt="artist.name" loading="lazy" />
-              <div class="artist-overlay">
-                <span class="artist-view">View Artist</span>
+          <router-link
+            v-for="artist in featuredArtists"
+            :key="artist.id"
+            :to="'/artists/' + artist.id"
+            class="artist-card-link"
+          >
+            <div class="artist-card-mini">
+              <div class="artist-photo">
+                <img :src="artist.image" :alt="artist.name" loading="lazy" />
+              </div>
+
+              <!-- Explicit torn paper div element over artist image -->
+              <div class="torn-paper-divider">
+                <img src="/images/sobekankertas.png" alt="Sobekan Kertas" class="torn-paper-img" />
+              </div>
+
+              <div class="artist-info">
+                <h3>{{ artist.name }}</h3>
               </div>
             </div>
-            <div class="artist-name">{{ artist.name }}</div>
           </router-link>
         </div>
         <div class="text-center mt-3">
@@ -193,12 +205,12 @@ const vinylRecords = [
 ]
 
 const featuredArtists = [
-  { id: 1, name: 'Teflon Dons', image: 'https://mad-tourbooking.de/media/Red-Light-Final-scaled-e1784117912711-900x495.png', link: '/artists' },
-  { id: 2, name: 'Abomination', image: 'https://mad-tourbooking.de/media/01.bmp', link: '/artists' },
-  { id: 3, name: 'Barcode', image: 'https://mad-tourbooking.de/media/Barcode-2026-line-up-900x473.png', link: '/artists' },
-  { id: 4, name: 'Nasty', image: 'https://mad-tourbooking.de/media/Nasty-2025_Instagram_Square-900x900.jpg', link: '/artists' },
-  { id: 5, name: 'Cruel Hand', image: 'https://mad-tourbooking.de/media/CruelHand_01-scaled-e1729698291310-900x706.jpg', link: '/artists' },
-  { id: 6, name: 'Death Before Dishonor', image: 'https://mad-tourbooking.de/media/DBD_Logo.png', link: '/artists' },
+  { id: 1, name: 'Teflon Dons', image: 'https://mad-tourbooking.de/media/Red-Light-Final-scaled-e1784117912711-900x495.png', link: '/artists/1' },
+  { id: 2, name: 'Abomination', image: 'https://mad-tourbooking.de/media/01.bmp', link: '/artists/2' },
+  { id: 3, name: 'Barcode', image: 'https://mad-tourbooking.de/media/Barcode-2026-line-up-900x473.png', link: '/artists/3' },
+  { id: 4, name: 'Nasty', image: 'https://mad-tourbooking.de/media/Nasty-2025_Instagram_Square-900x900.jpg', link: '/artists/4' },
+  { id: 5, name: 'Cruel Hand', image: 'https://mad-tourbooking.de/media/CruelHand_01-scaled-e1729698291310-900x706.jpg', link: '/artists/5' },
+  { id: 6, name: 'Death Before Dishonor', image: 'https://mad-tourbooking.de/media/DBD_Logo.png', link: '/artists/6' },
 ]
 </script>
 
@@ -215,70 +227,95 @@ const featuredArtists = [
   gap: var(--space-xl);
 }
 
-.artist-card {
+.artist-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Card container matching user reference */
+.artist-card-mini {
   position: relative;
-  border-radius: 8px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 12px;
   overflow: hidden;
-  background: var(--color-bg-alt);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background: #171717;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.artist-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+.artist-card-mini:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
 }
 
-.artist-image {
-  position: relative;
-  aspect-ratio: 16/9;
+/* Photo */
+.artist-card-mini .artist-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  background: #1a1a1a;
 }
 
-.artist-image img {
+.artist-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.artist-card:hover .artist-image img {
-  transform: scale(1.05);
+.artist-card-mini:hover .artist-photo img {
+  transform: scale(1.06);
 }
 
-.artist-overlay {
+/* Explicit div container for sobekankertas.png image placed directly above photo */
+.torn-paper-divider {
   position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  bottom: 37px;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  z-index: 3;
+  pointer-events: none;
 }
 
-.artist-card:hover .artist-overlay {
-  opacity: 1;
+.torn-paper-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: fill;
+  filter: drop-shadow(0 -3px 3px rgba(0, 0, 0, 0.35));
 }
 
-.artist-view {
-  padding: 8px 20px;
-  border: 2px solid var(--color-white);
-  color: var(--color-white);
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.75rem;
-  text-transform: capitalize;
-  letter-spacing: 1px;
-  border-radius: 4px;
-}
-
-.artist-name {
-  padding: var(--space-md) var(--space-lg);
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1rem;
+/* White Label Section at bottom */
+.artist-info {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 12px 6px 14px;
   text-align: center;
+  margin-top: auto;
+}
+
+.artist-info h3 {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.875rem;
+  line-height: 1.2;
+  margin: 0;
+  font-weight: 800;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Split Section */

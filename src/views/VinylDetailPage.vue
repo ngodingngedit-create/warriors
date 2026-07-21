@@ -218,11 +218,14 @@ const decreaseQty = () => { if (quantity.value > 1) quantity.value-- }
 const activeTab = ref('deskripsi')
 const isFavorite = ref(false)
 
+import { cartState } from '../store/cartState.js'
+
 const addToCart = () => {
-  alert(`Menambahkan ${quantity.value}x "${vinyl.value.title}" (${selectedVariant.value}) ke keranjang`)
+  cartState.addItem(vinyl.value, quantity.value)
 }
 const buyNow = () => {
-  alert(`Membeli ${quantity.value}x "${vinyl.value.title}" (${selectedVariant.value}) seharga ${formatPrice(vinyl.value.price * quantity.value)}`)
+  cartState.addItem(vinyl.value, quantity.value)
+  cartState.isOpen = true
 }
 
 const formatPrice = (price) => {

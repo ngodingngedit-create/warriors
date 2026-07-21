@@ -64,23 +64,39 @@
       <!-- Right Actions -->
       <div class="header-actions">
 
-        <!-- Language -->
-        <div class="lang-wrapper" @mouseenter="showLang = true" @mouseleave="showLang = false">
-          <button class="action-btn" aria-label="Language">
-            <span class="lang-flag" v-html="languages.find(l => l.code === currentLang).flag"></span>
+        <!-- Language Selector Button & Accordion Card Dropdown -->
+        <div class="lang-wrapper" ref="langWrapperRef">
+          <button 
+            class="action-btn lang-toggle-btn" 
+            @click.stop="showLang = !showLang"
+            aria-label="Select Language"
+          >
+            <span class="lang-flag" v-html="currentLangObj.flag"></span>
+            <span class="lang-code-text">{{ langState.current.toUpperCase() }}</span>
+            <svg class="lang-chevron" :class="{ open: showLang }" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
           </button>
+
+          <!-- Card Accordion Popup Dropdown -->
           <transition name="dropdown">
-            <div v-if="showLang" class="lang-dropdown">
-              <button
-                v-for="lang in languages"
-                :key="lang.code"
-                class="lang-option"
-                :class="{ active: lang.code === currentLang }"
-                @click="setLang(lang.code)"
-              >
-                <span class="lang-flag" v-html="lang.flag"></span>
-                <span>{{ lang.label }}</span>
-              </button>
+            <div v-if="showLang" class="lang-dropdown-card" @click.stop>
+              <div class="lang-card-header">
+                <span>{{ t('common.select_lang') }}</span>
+              </div>
+              <div class="lang-card-options">
+                <button
+                  v-for="lang in languages"
+                  :key="lang.code"
+                  class="lang-option-btn"
+                  :class="{ active: lang.code === langState.current }"
+                  @click="setLang(lang.code)"
+                >
+                  <span class="lang-flag" v-html="lang.flag"></span>
+                  <span class="lang-label">{{ lang.label }}</span>
+                  <svg v-if="lang.code === langState.current" class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </button>
+              </div>
             </div>
           </transition>
         </div>
@@ -95,7 +111,7 @@
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          <span class="login-text">Masuk</span>
+          <span class="login-text">{{ t('nav.login') }}</span>
         </router-link>
         <button
           v-else
@@ -110,13 +126,19 @@
         </button>
 
         <!-- Cart -->
-        <button class="action-btn cart-btn" @click="cartOpen = !cartOpen" aria-label="Cart">
+        <button class="action-btn cart-btn" @click="cartState.isOpen = !cartState.isOpen" aria-label="Cart">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1"/>
             <circle cx="20" cy="21" r="1"/>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
-          <span v-if="cart.count > 0" class="cart-badge">{{ cart.count }}</span>
+          <span 
+            v-if="totalCartCount > 0" 
+            class="cart-badge"
+            :class="{ 'badge-pop-anim': cartState.badgeAnim }"
+          >
+            {{ totalCartCount }}
+          </span>
         </button>
 
         <!-- Mobile Hamburger -->
@@ -130,51 +152,65 @@
 
     <!-- Cart Sidebar -->
     <transition name="cart-slide">
-      <div v-if="cartOpen" class="cart-overlay" @click="cartOpen = false">
+      <div v-if="cartState.isOpen" class="cart-overlay" @click="cartState.isOpen = false">
         <aside class="cart-sidebar" @click.stop>
           <div class="cart-header">
-            <h3>Shopping Cart</h3>
-            <button class="cart-close" @click="cartOpen = false">&times;</button>
+            <h3>{{ t('cart.title') }}</h3>
+            <button class="cart-close" @click="cartState.isOpen = false">&times;</button>
           </div>
 
-          <div v-if="cart.items.length === 0" class="cart-empty">
+          <div v-if="cartState.items.length === 0" class="cart-empty">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
             </svg>
-            <p>Your cart is empty</p>
+            <p>{{ t('cart.empty') }}</p>
           </div>
 
           <div v-else class="cart-body">
-            <div v-for="item in cart.items" :key="item.id" class="cart-item">
-              <div class="cart-item-detail">
-                <span class="cart-item-name">{{ item.name }}</span>
-                <span class="cart-item-price">€{{ (item.price * item.quantity).toFixed(2) }}</span>
+            <div v-for="item in cartState.items" :key="item.id" class="cart-item">
+              <div class="cart-item-thumb-box">
+                <img :src="item.image || '/vinyl/vinyl(1).webp'" :alt="item.name" class="cart-item-thumb" />
               </div>
-              <div class="cart-item-controls">
-                <button class="qty-btn" @click="decrementQty(item.id)">−</button>
-                <span class="qty-num">{{ item.quantity }}</span>
-                <button class="qty-btn" @click="incrementQty(item.id)">+</button>
-                <button class="remove-btn" @click="removeItem(item.id)" title="Remove item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
+              <div class="cart-item-content">
+                <div class="cart-item-top-row">
+                  <span class="cart-item-title">{{ item.name }}</span>
+                  <button class="cart-item-trash-btn" @click="cartState.removeItem(item.id)" title="Hapus produk">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <span class="cart-item-variant">{{ t('cart.variant') }}: {{ item.variant || 'S' }}</span>
+
+                <div class="cart-item-bottom-row">
+                  <span class="cart-item-price">{{ formatPrice(item.price * item.quantity) }}</span>
+
+                  <div class="cart-item-qty-box">
+                    <button class="cart-qty-btn" @click="cartState.decrementQty(item.id)">−</button>
+                    <span class="cart-qty-num">{{ item.quantity }}</span>
+                    <button class="cart-qty-btn" @click="cartState.incrementQty(item.id)">+</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div v-if="cart.items.length > 0" class="cart-footer">
+          <div v-if="cartState.items.length > 0" class="cart-footer">
             <div class="cart-total">
-              <span>Total</span>
-              <span class="cart-total-price">€{{ cartTotal.toFixed(2) }}</span>
+              <span>{{ t('cart.total') }}</span>
+              <span class="cart-total-price">{{ formatPrice(totalCartPrice) }}</span>
             </div>
-            <button class="btn btn-checkout">Checkout</button>
-            <button class="cart-clear" @click="clearCart">Clear All</button>
+            <button class="btn btn-checkout">{{ t('cart.checkout') }}</button>
+            <button class="cart-clear" @click="cartState.clearCart()">{{ t('cart.clear') }}</button>
           </div>
         </aside>
       </div>
     </transition>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu Sidebar -->
     <transition name="slide">
       <div v-if="mobileMenuOpen" class="mobile-overlay" @click="mobileMenuOpen = false">
         <div class="mobile-menu" @click.stop>
@@ -182,18 +218,32 @@
             <img src="/images/logo-warriors-white.png" alt="Warriors" class="mobile-logo" />
             <button class="mobile-close" @click="mobileMenuOpen = false">&times;</button>
           </div>
+
           <nav class="mobile-nav">
             <div v-for="link in navLinks" :key="link.path" class="mobile-nav-item">
-              <div class="mobile-link-wrap" @click="toggleMobileAccordion(link.path)">
-                <router-link
-                  :to="link.path"
-                  class="mobile-link"
-                  @click="!link.children && (mobileMenuOpen = false)"
-                >{{ link.label }}</router-link>
-                <button v-if="link.children" class="mobile-arrow" :class="{ open: mobileAccordion === link.path }">
+              <!-- Item with children or accordion (Expandable Sub-button) -->
+              <div 
+                v-if="link.children || link.accordion" 
+                class="mobile-link-wrap"
+                @click="toggleMobileAccordion(link.path)"
+              >
+                <span class="mobile-link">{{ link.label }}</span>
+                <button class="mobile-arrow" :class="{ open: mobileAccordion === link.path }">
                   <svg width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
                 </button>
               </div>
+
+              <!-- Simple Item without sub-buttons -->
+              <router-link
+                v-else
+                :to="link.path"
+                class="mobile-link simple-mobile-link"
+                @click="mobileMenuOpen = false"
+              >
+                {{ link.label }}
+              </router-link>
+
+              <!-- Children Accordion Dropdown -->
               <transition name="accordion">
                 <div v-if="link.children && mobileAccordion === link.path" class="mobile-subnav">
                   <router-link
@@ -203,16 +253,17 @@
                     class="mobile-sub-link"
                     @click="mobileMenuOpen = false"
                   >
-                    <span v-html="child.icon" class="sub-icon"></span>
-                    {{ child.label }}
+                    <span v-if="child.icon" v-html="child.icon" class="sub-icon"></span>
+                    <span>{{ child.label }}</span>
                   </router-link>
                 </div>
               </transition>
-              <!-- Mobile accordion sections -->
+
+              <!-- Section Accordion Dropdown -->
               <transition name="accordion">
                 <div v-if="link.accordion && mobileAccordion === link.path" class="mobile-subnav">
                   <div v-for="(sec, si) in link.accordion" :key="si" class="mobile-acc-section">
-                    <h5 class="mobile-acc-title">{{ sec.title }}</h5>
+                    <h5 v-if="sec.title" class="mobile-acc-title">{{ sec.title }}</h5>
                     <router-link
                       v-for="item in sec.items"
                       :key="item.path"
@@ -220,22 +271,31 @@
                       class="mobile-sub-link"
                       @click="mobileMenuOpen = false"
                     >
-                      <span v-html="item.icon" class="sub-icon"></span>
-                      {{ item.label }}
+                      <span v-if="item.icon" v-html="item.icon" class="sub-icon"></span>
+                      <span>{{ item.label }}</span>
                     </router-link>
                   </div>
                 </div>
               </transition>
             </div>
           </nav>
+
+          <!-- Mobile Actions (Cart, Login/Profile) -->
           <div class="mobile-actions">
-            <button class="mobile-action-btn" @click="mobileMenuOpen = false; cartOpen = true">
+            <button class="mobile-action-btn" @click="mobileMenuOpen = false; cartState.isOpen = true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              Cart <span v-if="cart.count > 0">({{ cart.count }})</span>
+              <span>Keranjang</span>
+              <span v-if="totalCartCount > 0" class="mobile-cart-badge">({{ totalCartCount }})</span>
             </button>
-            <button class="mobile-action-btn" @click="authStore.isLoggedIn = !authStore.isLoggedIn">
+
+            <router-link v-if="!isLoggedIn" to="/login" class="mobile-action-btn" @click="mobileMenuOpen = false">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              {{ isLoggedIn ? 'Profile' : 'Masuk' }}
+              <span>Masuk</span>
+            </router-link>
+            
+            <button v-else class="mobile-action-btn" @click="authStore.isLoggedIn = false; mobileMenuOpen = false">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Profil / Keluar</span>
             </button>
           </div>
         </div>
@@ -245,13 +305,42 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { authStore } from '../stores/auth.js'
+import { cartState, totalCartCount, totalCartPrice } from '../store/cartState.js'
+
+const formatPrice = (price) => {
+  if (price === 0 || !price) return 'Gratis'
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(price)
+}
 
 const route = useRoute()
 const isScrolled = ref(false)
+const mobileMenuOpen = ref(false)
+const mobileAccordion = ref(null)
 const isLoggedIn = computed(() => authStore.isLoggedIn)
+
+// Lock body scrolling when Cart Sidebar or Mobile Menu is open
+watch(() => cartState.isOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else if (!mobileMenuOpen.value) {
+    document.body.style.overflow = ''
+  }
+})
+
+watch(mobileMenuOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else if (!cartState.isOpen) {
+    document.body.style.overflow = ''
+  }
+})
 
 const isDarkHeader = computed(() =>
   route.path !== '/'
@@ -260,15 +349,37 @@ const headerClass = computed(() => ({
   scrolled: isScrolled.value || isDarkHeader.value
 }))
 
-const currentLang = ref('id')
+import { langState, t } from '../store/langState.js'
+
+const showLang = ref(false)
+const langWrapperRef = ref(null)
+
 const languages = [
-  { code: 'id', label: 'Indonesia', flag: '<svg viewBox="0 0 6 4" width="20" height="14"><rect width="6" height="2" fill="#CE1126"/><rect y="2" width="6" height="2" fill="#FFF"/></svg>' },
-  { code: 'en', label: 'English', flag: '<svg viewBox="0 0 6 4" width="20" height="14"><rect width="6" height="4" fill="#FFF"/><rect x="2" width="2" height="4" fill="#CE1126"/><rect y="1.5" width="6" height="1" fill="#CE1126"/></svg>' },
+  { 
+    code: 'id', 
+    label: 'Indonesia', 
+    flag: `<svg viewBox="0 0 600 400" width="20" height="14" style="border-radius:2px; object-fit:cover; display:inline-block; vertical-align:middle;"><rect width="600" height="200" fill="#DA251D"/><rect y="200" width="600" height="200" fill="#FFFFFF"/></svg>` 
+  },
+  { 
+    code: 'en', 
+    label: 'English', 
+    flag: `<svg viewBox="0 0 60 30" width="20" height="14" style="border-radius:2px; object-fit:cover; display:inline-block; vertical-align:middle;"><clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="t"><path d="M0,0 L60,30 M60,0 L0,30"/></clipPath><g clip-path="url(#s)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>` 
+  },
 ]
 
+const currentLangObj = computed(() => {
+  return languages.find(l => l.code === langState.current) || languages[0]
+})
+
 function setLang(code) {
-  currentLang.value = code
+  langState.setLang(code)
   showLang.value = false
+}
+
+function handleClickOutside(e) {
+  if (langWrapperRef.value && !langWrapperRef.value.contains(e.target)) {
+    showLang.value = false
+  }
 }
 
 // Cart
@@ -313,33 +424,36 @@ function addSampleItems() {
 }
 // Uncomment below to pre-fill cart for demo:
 // addSampleItems()
-
-const navLinks = [
-  { path: '/', label: 'Home' },
-    { path: '/tours', label: 'Tours', children: [
-    { path: '/tours', label: 'All Tours', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 3l14 9-14 9V3z"/></svg>' },
-    { path: '/dates', label: 'Tour Dates', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' },
-  ]},
+const navLinks = computed(() => [
+  { path: '/', label: t('nav.home') },
+  { 
+    path: '/tours', 
+    label: t('nav.tours'), 
+    children: [
+      { path: '/tours', label: t('nav.all_tours'), icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 3l14 9-14 9V3z"/></svg>' },
+      { path: '/dates', label: t('nav.tour_dates'), icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' },
+    ]
+  },
   {
     path: '/revelations',
     label: 'Revelations Records',
     children: [
-      { path: '/revelations', label: 'Artists', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>' },
+      { path: '/artists', label: t('nav.artists'), icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>' },
       { path: '/revelations/releases', label: 'Releases', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' },
     ],
     accordion: [
       {
         title: 'Label',
         items: [
-          { path: '/revelations', label: 'Artist', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' },
+          { path: '/artists', label: t('nav.artists'), icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' },
         ]
       },
       {
-        title: 'Merch',
+        title: t('nav.merch'),
         items: [
-          { path: '/revelations/merch', label: 'Apparel', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-2.34-1.61l-.5-.16-.16.49a4 4 0 0 1-7.68 0l-.16-.49-.5.16a5.5 5.5 0 0 0-2.34 1.61L1 10l4 2 2-2v10h10V10l2 2 4-2-3.16-5.39z"/></svg>' },
-          { path: '/revelations/merch/accessories', label: 'Accessories', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>' },
-          { path: '/revelations/merch/vinyl', label: 'Vinyl & CDs', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v20"/></svg>' },
+          { path: '/revelations/merch', label: t('nav.apparel'), icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-2.34-1.61l-.5-.16-.16.49a4 4 0 0 1-7.68 0l-.16-.49-.5.16a5.5 5.5 0 0 0-2.34 1.61L1 10l4 2 2-2v10h10V10l2 2 4-2-3.16-5.39z"/></svg>' },
+          { path: '/revelations/merch/accessories', label: t('nav.accessories'), icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>' },
+          { path: '/revelations/merch/vinyl', label: t('nav.vinyl'), icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v20"/></svg>' },
         ]
       },
       {
@@ -352,10 +466,10 @@ const navLinks = [
       }
     ]
   },
-  { path: '/artists', label: 'Artists' },
+  { path: '/artists', label: t('nav.artists') },
   {
     path: '/labels',
-    label: 'Labels',
+    label: t('nav.labels'),
     accordion: [
       {
         title: 'A - D',
@@ -395,7 +509,7 @@ const navLinks = [
       }
     ]
   },
-]
+])
 
 function isActive(path) {
   if (path === '/') return route.path === '/'
@@ -410,8 +524,15 @@ function handleScroll() {
   isScrolled.value = window.scrollY > 50
 }
 
-onMounted(() => window.addEventListener('scroll', handleScroll))
-onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <style scoped>
@@ -657,43 +778,117 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   letter-spacing: 0.5px;
 }
 
-/* Language */
+/* Language Accordion Card */
 .lang-wrapper {
   position: relative;
 }
 
-.lang-dropdown {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  min-width: 150px;
-  background: #1a1a1a;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+.lang-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.lang-option {
+.lang-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.lang-code-text {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.lang-chevron {
+  transition: transform 0.25s ease;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.lang-chevron.open {
+  transform: rotate(180deg);
+  color: #ffffff;
+}
+
+.lang-dropdown-card {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 180px;
+  background: #171717;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  padding: 8px;
+  z-index: 1000;
+  animation: dropdownIn 0.25s ease forwards;
+}
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lang-card-header {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 6px 10px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 4px;
+}
+
+.lang-card-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lang-option-btn {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 10px 14px;
-  background: none;
+  padding: 10px 12px;
+  background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.84rem;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 0.875rem;
   transition: all 0.2s ease;
   text-align: left;
 }
 
-.lang-option:hover,
-.lang-option.active {
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+.lang-option-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.lang-option-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.lang-label {
+  flex: 1;
+}
+
+.check-icon {
+  flex-shrink: 0;
 }
 
 .lang-flag { display: flex; align-items: center; }
@@ -720,7 +915,9 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 .cart-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 2000;
   display: flex;
   justify-content: flex-end;
@@ -780,62 +977,125 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 }
 
 .cart-item {
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.cart-item-detail {
+.cart-item-thumb-box {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #1a1a1a;
+}
+
+.cart-item-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cart-item-top-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.cart-item-title {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cart-item-trash-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.cart-item-trash-btn:hover {
+  color: #ef4444;
+}
+
+.cart-item-variant {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
   margin-bottom: 8px;
 }
 
-.cart-item-name {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: #fff;
+.cart-item-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .cart-item-price {
+  font-family: var(--font-heading, sans-serif);
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-weight: 800;
+  color: #ffffff;
 }
 
-.cart-item-controls {
+.cart-item-qty-box {
   display: flex;
   align-items: center;
-  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 2px 6px;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.qty-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+.cart-qty-btn {
   background: transparent;
-  color: #fff;
-  font-size: 1rem;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-.qty-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.25);
+.cart-qty-btn:hover {
+  color: #ffffff;
 }
 
-.qty-num {
-  width: 28px;
+.cart-qty-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  min-width: 14px;
   text-align: center;
-  font-size: 0.875rem;
-  color: #fff;
-  font-family: var(--font-heading);
-  font-weight: 600;
 }
 
 .remove-btn {

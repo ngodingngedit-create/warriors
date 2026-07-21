@@ -175,6 +175,13 @@ p {
   font-size: 1rem;
 }
 
+.btn-sm,
+.btn-gold.btn-sm {
+  padding: 5px 14px;
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
 /* Section */
 .section {
   padding: var(--space-2xl) 0;
@@ -229,7 +236,8 @@ p {
 
 /* Consistent tighter gap for tour cards grid (both home and all tours) */
 .tours-grid {
-  gap: 12px;
+  gap: 20px 12px;
+  align-items: stretch;
 }
 
 /* Cards */
@@ -359,8 +367,26 @@ p {
   }
 
   .btn-lg {
-    padding: 14px 28px;
-    font-size: 0.875rem;
+    padding: 10px 22px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .btn-lg,
+  .btn.btn-outline.btn-lg,
+  .btn.btn-outline-light.btn-lg {
+    padding: 8px 18px !important;
+    font-size: 0.8125rem !important;
+    border-radius: 6px !important;
+  }
+
+  .player-controls-background {
+    padding: 8px 12px !important;
+    height: auto !important;
+    border-top: none !important;
+    border-top-width: 0 !important;
+    box-shadow: none !important;
   }
 }
 

@@ -68,43 +68,29 @@
                   </svg>
                   <div class="val-group">
                     <span class="val">{{ tour.venue_name }}, {{ tour.location_city }}</span>
-                    <a :href="tour.map_link" target="_blank" class="map-link">Google Maps Link</a>
                   </div>
                 </div>
               </div>
 
-              <div class="info-card-bottom">
-                <div class="divider"></div>
-
-                <!-- Organizer -->
-                <div class="organizer-section">
-                  <span class="lbl">Diselenggarakan Oleh</span>
-                  <div class="organizer-badge">
-                    <div class="org-logo">
-                      <span class="logo-text">K</span>
-                    </div>
-                    <span class="org-name">{{ tour.creator }}</span>
-                  </div>
+              <!-- Simple Organizer Row & Share Button matching user reference image -->
+              <div class="simple-organizer-row">
+                <div class="org-avatar-box">
+                  <img :src="tour.creatorImage || 'https://mad-tourbooking.de/media/DBD_Logo.png'" alt="Organizer" class="org-avatar-img" />
                 </div>
+                <div class="org-text-meta">
+                  <span class="org-lbl">Diselenggarakan Oleh</span>
+                  <span class="org-name-val">{{ tour.creator || 'Warriors Records' }}</span>
+                </div>
+                <button class="simple-share-btn" @click="handleShare" title="Bagikan Event">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"/>
+                    <circle cx="6" cy="12" r="3"/>
+                    <circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                  </svg>
+                </button>
               </div>
-            </div>
-
-            <!-- Action buttons -->
-            <div class="action-buttons-row">
-              <button class="action-btn share-btn" @click="handleShare" title="Bagikan Event">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"/>
-                  <circle cx="6" cy="12" r="3"/>
-                  <circle cx="18" cy="19" r="3"/>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                </svg>
-              </button>
-              <button class="action-btn chat-btn" @click="handleChat" title="Chat Organizer">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-              </button>
             </div>
           </div>
         </div>
@@ -1484,9 +1470,11 @@ onUnmounted(() => {
   font-size: 0.875rem;
 }
 
-.btn-sm {
-  padding: 6px 24px;
-  font-size: 0.8125rem;
+.btn-sm,
+.btn-gold.btn-sm {
+  padding: 4px 14px;
+  font-size: 0.72rem;
+  line-height: 1.2;
 }
 
 @media (max-width: 768px) {
@@ -1887,23 +1875,23 @@ onUnmounted(() => {
 }
 
 
-/* Mobile Sticky Bottom Bar */
+/* Sticky Bottom Bar (Visible on Desktop & Mobile) */
 .mobile-sticky-bottom {
-  display: none;
+  display: block;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background: #171717;
   border-top: 1px solid #2d2d2d;
-  padding: 12px 20px;
+  padding: 10px 0;
   z-index: 90;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .mobile-sticky-bottom.show-on-deskripsi {
   display: block;
-  bottom: -2px;
+  bottom: 0;
 }
 
 .bottom-container {
@@ -1911,12 +1899,14 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0 80px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 @media (max-width: 768px) {
   .bottom-container {
-    padding: 0 24px;
+    padding: 0 16px;
   }
 }
 
@@ -1926,51 +1916,52 @@ onUnmounted(() => {
 }
 
 .bottom-price-info .lbl {
-  font-size: 0.6875rem;
+  font-size: 0.6rem;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 600;
 }
 
 .bottom-price-info .price {
-  font-size: 1.125rem;
-  font-weight: 900;
+  font-size: 0.9375rem;
+  font-weight: 800;
   color: #ffffff;
 }
 
 .bottom-action-buttons {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .detail-btn {
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
   color: #171717;
-  font-weight: 800;
-  font-size: 0.75rem;
-  padding: 10px 14px;
-  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 6px 10px;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .checkout-btn-mobile {
-  background: #171717;
-  color: #ffffff;
+  background: #ffffff;
+  color: #171717;
   border: none;
   font-weight: 800;
-  font-size: 0.8125rem;
-  padding: 10px 24px;
-  border-radius: 8px;
+  font-size: 0.72rem;
+  padding: 7px 16px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .checkout-btn-mobile:disabled {
   background: #d1d5db;
+  color: #9ca3af;
   cursor: not-allowed;
 }
 
@@ -2221,4 +2212,285 @@ onUnmounted(() => {
   z-index: 1;
 }
 
+/* Mobile Responsiveness for Tour Details Page */
+@media (max-width: 640px) {
+  .details-hero {
+    min-height: auto;
+    padding: 72px 0 20px;
+  }
+
+  /* Un-nest container children for exact flex ordering on mobile */
+  .hero-container {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .hero-top-row,
+  .hero-main-grid {
+    display: contents !important;
+  }
+
+  /* 1st: Banner Image AT THE VERY TOP */
+  .banner-wrapper {
+    order: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    max-height: 180px !important;
+    border-radius: 6px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .tour-banner-img {
+    border-radius: 6px !important;
+    object-fit: cover !important;
+  }
+
+  /* 2nd: Tour Title BELOW Banner Image */
+  .hero-title-area {
+    order: 2 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .event-title {
+    font-size: 1.05rem !important;
+    line-height: 1.25 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+  }
+
+  /* Countdown area completely hidden on mobile */
+  .countdown-area {
+    display: none !important;
+  }
+
+  /* 3rd: Info Sidebar BELOW Tour Title */
+  .info-sidebar {
+    order: 3 !important;
+    height: auto !important;
+    gap: 8px !important;
+  }
+
+  .info-bar-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    gap: 10px !important;
+  }
+
+  .info-card-top {
+    gap: 8px !important;
+  }
+
+  .info-bar-card .divider {
+    display: none !important;
+  }
+
+  .info-row {
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .info-row .icon {
+    width: 16px !important;
+    height: 16px !important;
+    opacity: 0.9 !important;
+  }
+
+  .info-row .val {
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+  }
+
+  .info-row .map-link {
+    font-size: 0.7rem !important;
+  }
+
+  .organizer-section {
+    margin-top: 4px;
+  }
+
+  .organizer-section .lbl {
+    font-size: 0.65rem !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .org-name {
+    font-size: 0.78rem !important;
+  }
+
+  /* Active & all tab buttons - smaller font size */
+  .content-navigation-tabs {
+    top: 56px !important;
+    gap: 8px !important;
+    padding-top: 10px !important;
+  }
+
+  .nav-tab-btn {
+    padding: 8px 10px !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* Smaller section titles, text, tables & icons */
+  .info-section h2 {
+    font-size: 1.05rem !important;
+    gap: 8px !important;
+  }
+
+  .title-icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .section-content,
+  .html-content {
+    font-size: 0.8125rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .read-more-btn {
+    font-size: 0.75rem !important;
+  }
+
+  .btn-sm,
+  .btn-gold.btn-sm {
+    font-size: 0.6875rem !important;
+    padding: 3px 10px !important;
+  }
+
+  /* Tables smaller text and compact padding */
+  .dates-table,
+  .detail-dates-table {
+    font-size: 0.75rem !important;
+  }
+
+  .dates-table th,
+  .detail-dates-table th {
+    font-size: 0.65rem !important;
+    padding: 8px 10px !important;
+  }
+
+  .dates-table td,
+  .detail-dates-table td {
+    font-size: 0.75rem !important;
+    padding: 8px 10px !important;
+  }
+
+  .date-cell,
+  .detail-date-cell {
+    font-size: 0.75rem !important;
+  }
+
+  /* Terms styling */
+  .terms-modern {
+    padding: 14px !important;
+    border-radius: 6px !important;
+  }
+
+  .term-num {
+    font-size: 0.7rem !important;
+    min-width: 24px !important;
+  }
+
+  .term-text {
+    font-size: 0.78rem !important;
+  }
+
+  /* Simple Organizer Row & Share Button Mobile Styles */
+  .simple-organizer-row {
+    border-top: none !important;
+    margin-top: 8px !important;
+    padding-top: 0 !important;
+  }
+
+  .org-avatar-box {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .org-lbl {
+    font-size: 0.72rem !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  .org-name-val {
+    font-size: 0.84rem !important;
+  }
+
+  .simple-share-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* Base Styles for Simple Organizer Row & Share Button */
+.simple-organizer-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.org-avatar-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  background: #222222;
+}
+
+.org-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.org-text-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.org-lbl {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.org-name-val {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.simple-share-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.simple-share-btn:hover {
+  opacity: 0.8;
+  transform: scale(1.08);
+}
 </style>
