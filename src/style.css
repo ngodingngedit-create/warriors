@@ -171,8 +171,12 @@ p {
 }
 
 .btn-lg {
-  padding: 16px 36px;
-  font-size: 1rem;
+  padding: 12px 28px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: 8px;
+  letter-spacing: 0.3px;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .btn-sm,

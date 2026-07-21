@@ -473,13 +473,22 @@ const featuredArtists = [
     bottom: 33px !important;
     height: 24px !important;
   }
+}
 
 .home-action-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 24px;
+  margin-top: 32px;
+}
+
+.text-center.mt-3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
 }
 
 @media (max-width: 640px) {
@@ -491,6 +500,12 @@ const featuredArtists = [
     width: 100% !important;
     max-width: 270px !important;
     margin: 20px auto 0 !important;
+  }
+
+  .text-center.mt-3 {
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 20px !important;
   }
 
   .home-action-buttons .btn,
@@ -513,6 +528,5 @@ const featuredArtists = [
     width: 100%;
     text-align: center;
   }
-}
 }
 </style>
