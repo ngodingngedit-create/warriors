@@ -21,9 +21,9 @@
         <div class="grid grid-4 tours-grid">
           <TourCard v-for="tour in allHomeTours" :key="tour.id" :tour="tour" />
         </div>
-        <div class="text-center mt-3">
+        <div class="home-action-buttons">
           <router-link to="/tours" class="btn btn-outline btn-lg">View All Tours</router-link>
-          <router-link to="/dates" class="btn btn-outline btn-lg" style="margin-left: 16px;">View All Tour Dates</router-link>
+          <router-link to="/dates" class="btn btn-outline btn-lg">View All Tour Dates</router-link>
         </div>
       </div>
     </section>
@@ -209,8 +209,6 @@ const featuredArtists = [
   { id: 2, name: 'Abomination', image: 'https://mad-tourbooking.de/media/01.bmp', link: '/artists/2' },
   { id: 3, name: 'Barcode', image: 'https://mad-tourbooking.de/media/Barcode-2026-line-up-900x473.png', link: '/artists/3' },
   { id: 4, name: 'Nasty', image: 'https://mad-tourbooking.de/media/Nasty-2025_Instagram_Square-900x900.jpg', link: '/artists/4' },
-  { id: 5, name: 'Cruel Hand', image: 'https://mad-tourbooking.de/media/CruelHand_01-scaled-e1729698291310-900x706.jpg', link: '/artists/5' },
-  { id: 6, name: 'Death Before Dishonor', image: 'https://mad-tourbooking.de/media/DBD_Logo.png', link: '/artists/6' },
 ]
 </script>
 
@@ -223,7 +221,7 @@ const featuredArtists = [
 /* Artists Grid */
 .artists-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-xl);
 }
 
@@ -444,9 +442,67 @@ const featuredArtists = [
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .artists-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .artist-card-link {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .artist-card-mini {
+    width: 100% !important;
+    max-width: 270px !important;
+    margin: 0 auto !important;
+    border-radius: 10px !important;
+  }
+
+  .artist-info {
+    padding: 10px 6px 12px !important;
+  }
+
+  .artist-info h3 {
+    font-size: 0.8125rem !important;
+  }
+
+  .torn-paper-divider {
+    bottom: 33px !important;
+    height: 24px !important;
+  }
+
+.home-action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+@media (max-width: 640px) {
+  .home-action-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 270px !important;
+    margin: 20px auto 0 !important;
+  }
+
+  .home-action-buttons .btn,
+  .text-center.mt-3 .btn {
+    width: 100% !important;
+    max-width: 270px !important;
+    margin-left: 0 !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 8px 14px !important;
+    font-size: 0.75rem !important;
+    border-radius: 6px !important;
   }
 
   .festival-buttons {
@@ -457,5 +513,6 @@ const featuredArtists = [
     width: 100%;
     text-align: center;
   }
+}
 }
 </style>

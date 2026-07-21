@@ -192,7 +192,40 @@ const visibleArtists = computed(() => {
 @media (max-width: 768px) {
   .artists-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .artists-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .artist-card-link {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .artist-card-mini {
+    width: 100% !important;
+    max-width: 270px !important;
+    margin: 0 auto !important;
+    border-radius: 10px !important;
+  }
+
+  .artist-info {
+    padding: 10px 6px 12px !important;
+  }
+
+  .artist-info h3 {
+    font-size: 0.8125rem !important;
+  }
+
+  .torn-paper-divider {
+    bottom: 33px !important;
+    height: 24px !important;
   }
 }
 </style>

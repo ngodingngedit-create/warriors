@@ -9,7 +9,7 @@
             :src="videoSrc"
             title="YouTube video player"
             frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
           ></iframe>
         </div>
@@ -33,7 +33,7 @@ const wrapperRef = ref(null)
 const videoContainerRef = ref(null)
 
 const videoSrc = computed(() =>
-  `https://www.youtube.com/embed/${props.videoId}?autoplay=1&rel=0&mute=1&loop=1&playlist=${props.videoId}`
+  `https://www.youtube.com/embed/${props.videoId}?autoplay=1&mute=1&loop=1&controls=1&playsinline=1&playlist=${props.videoId}`
 )
 
 // Track scroll state
@@ -52,6 +52,12 @@ function handleScroll() {
 function updateScale() {
   if (!sectionRef.value || !videoContainerRef.value) return
 
+  // Fixed size on mobile screen (width <= 768px)
+  if (window.innerWidth <= 768) {
+    videoContainerRef.value.style.transform = 'none'
+    return
+  }
+
   const rect = sectionRef.value.getBoundingClientRect()
   const windowH = window.innerHeight
   const windowCenter = windowH / 2
@@ -60,37 +66,29 @@ function updateScale() {
   const scrollingDown = currentScrollY > lastScrollY
   lastScrollY = currentScrollY
 
-  // Distance of section center from viewport center (negative = above, positive = below)
+  // Distance of section center from viewport center
   const distFromCenter = sectionCenter - windowCenter
 
   if (scrollingDown) {
-    // === SCROLLING DOWN ===
     if (distFromCenter <= 0) {
-      // Section center is at or above viewport center → we've scrolled into it
       hasBeenCentered = true
     }
-    // Once centered, stay big even if we scroll past
     if (hasBeenCentered) {
       videoContainerRef.value.style.transform = 'scale(1.25)'
     } else {
-      // Approaching: scale based on proximity (0 = far below, 1 = at center)
       const progress = Math.max(0, Math.min(1, 1 - distFromCenter / windowH))
       const scale = 1.0 + progress * 0.25
       videoContainerRef.value.style.transform = `scale(${scale})`
     }
   } else {
-    // === SCROLLING UP ===
     if (distFromCenter > windowH * 0.3) {
-      // Section center is well below viewport → we've scrolled back above it → shrink
       hasBeenCentered = false
       const progress = Math.max(0, Math.min(1, 1 - distFromCenter / windowH))
       const scale = 1.0 + progress * 0.25
       videoContainerRef.value.style.transform = `scale(${scale})`
     } else if (hasBeenCentered) {
-      // Still in or near viewport while scrolling up → keep big
       videoContainerRef.value.style.transform = 'scale(1.25)'
     } else {
-      // Never been centered while scrolling up → small
       videoContainerRef.value.style.transform = 'scale(1.0)'
     }
   }
@@ -151,18 +149,28 @@ onUnmounted(() => {
   z-index: 1;
 }
 
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
+  .video-section {
+    padding: 24px 0 !important;
+  }
+
   .video-wrapper {
-    max-width: 100%;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 4px !important;
   }
 
   .video-container {
-    border-radius: 8px;
-    transform-origin: center top;
+    border-radius: 4px !important;
+    transform: none !important;
+    transition: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
   }
 
-  .video-section {
-    padding: var(--space-2xl) 0;
+  .video-container iframe {
+    border-radius: 4px !important;
   }
 }
 </style>
