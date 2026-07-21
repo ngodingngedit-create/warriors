@@ -6,7 +6,7 @@
       subtitle="Pioneers of hardcore punk &amp; metal booking Since 1983"
       badge="Since 1990"
       :buttons="[
-        { label: 'View Upcoming Tours', link: '/tours', variant: 'btn-primary btn-lg' },
+        { label: 'View All Tours', link: '/tours', variant: 'btn-primary btn-lg' },
         { label: 'View All Dates', link: '/dates', variant: 'btn-outline-light btn-lg' }
       ]"
     />
@@ -14,12 +14,12 @@
     <!-- Featured Video -->
     <VideoSection />
 
-    <!-- Upcoming Tours -->
+    <!-- All Tours -->
     <section class="section">
       <div class="container">
-        <h2 class="section-title">Upcoming Tours</h2>
+        <h2 class="section-title">All Tours</h2>
         <div class="grid grid-4 tours-grid">
-          <TourCard v-for="tour in upcomingTours" :key="tour.id" :tour="tour" />
+          <TourCard v-for="tour in allHomeTours" :key="tour.id" :tour="tour" />
         </div>
         <div class="text-center mt-3">
           <router-link to="/tours" class="btn btn-outline btn-lg">View All Tours</router-link>
@@ -82,7 +82,7 @@ import TourCard from '../components/TourCard.vue'
 import VinylCard from '../components/VinylCard.vue'
 import Footer from '../components/Footer.vue'
 
-const upcomingTours = [
+const allHomeTours = [
   {
     id: 1,
     date: 'Sep 12, 2026',
@@ -268,7 +268,7 @@ const featuredArtists = [
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.75rem;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 1px;
   border-radius: 4px;
 }
@@ -350,7 +350,7 @@ const featuredArtists = [
   font-family: var(--font-heading);
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 1px;
   color: var(--color-accent);
 }

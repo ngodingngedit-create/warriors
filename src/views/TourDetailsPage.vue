@@ -130,7 +130,7 @@
             :ref="(el) => setTabRef(el, 'tiket')"
             @click="scrollToSection('tiket')"
           >
-            Tiket
+            Tanggal
           </button>
           <button 
             class="nav-tab-btn" 
@@ -154,233 +154,110 @@
         <div class="tab-content-wrapper">
 
           <!-- Deskripsi -->
-          <div v-show="activeContentTab === 'deskripsi'" ref="sectionDeskripsi" class="tab-panel">
-            <div class="info-section" id="sec-deskripsi">
-              <h2>
-                <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                  <line x1="16" y1="13" x2="8" y2="13"/>
-                  <line x1="16" y1="17" x2="8" y2="17"/>
-                </svg>
-                Deskripsi
-              </h2>
-              <div class="section-content html-content" :class="{ 'desc-collapsed': !descExpanded }" v-html="tour.description"></div>
-              <button class="read-more-btn" @click="toggleDesc">
-                {{ descExpanded ? 'Tutup' : 'Baca Selengkapnya' }}
-                <svg :class="{ rotated: descExpanded }" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="18 15 12 9 6 15"/>
-                </svg>
-              </button>
-            </div>
-
-            <div class="info-section" id="sec-lokasi">
-              <h2>
-                <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
-                </svg>
-                Lokasi
-              </h2>
-              <div class="section-content">
-                <div class="lokasi-detail">
-                  <div class="lokasi-row">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <div>
-                      <div class="lokasi-venue">{{ tour.venue_name }}</div>
-                      <div class="lokasi-city">{{ tour.location_city }}</div>
-                    </div>
-                  </div>
-                  <a :href="tour.map_link" target="_blank" class="maps-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Lihat di Google Maps
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="info-section" id="sec-ketentuan">
-              <h2>
-                <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                  <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-                Syarat &amp; Ketentuan
-              </h2>
-              <div class="section-content">
-                <div class="html-content" v-html="tour.term_condition"></div>
-                <div class="terms-sections">
-                  <div v-for="(sec, si) in dummyTermsSections" :key="si" class="terms-group">
-                    <h3 class="terms-group-title">{{ sec.title }}</h3>
-                    <ul class="terms-list">
-                      <li v-for="(item, ii) in sec.items" :key="ii">
-                        <span class="terms-bullet"></span>
-                        {{ item }}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="info-section" v-show="activeContentTab !== 'tiket'" id="sec-deskripsi">
+            <h2>
+              <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+              Deskripsi
+            </h2>
+            <div class="section-content html-content" :class="{ 'desc-collapsed': !descExpanded }" v-html="tour.description"></div>
+            <button class="read-more-btn" @click="toggleDesc">
+              {{ descExpanded ? 'Tutup' : 'Baca Selengkapnya' }}
+              <svg :class="{ rotated: descExpanded }" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"/>
+              </svg>
+            </button>
           </div>
 
-          <!-- Tiket -->
-          <div v-show="activeContentTab === 'tiket'" ref="sectionTiket" class="tab-panel">
-            <div class="info-section">
-              <h2>
-                <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/>
-                  <path d="M12 3v9"/>
-                  <path d="m9 6 3-3 3 3"/>
-                  <rect x="3" y="6" width="18" height="6" rx="1"/>
-                </svg>
-                Pilih Tiket
-              </h2>
-              <div class="section-content">
-                <div class="session-tabs">
-                  <button 
-                    v-for="(session, idx) in tour.sessions" 
-                    :key="session.id" 
-                    class="session-tab-btn"
-                    :class="{ active: activeSessionIdx === idx }"
-                    @click="activeSessionIdx = idx"
-                  >
-                    <span class="day">{{ getDayName(session.session_date) }}</span>
-                    <span class="date">{{ getFormattedDate(session.session_date) }}</span>
-                  </button>
-                </div>
-
-                <div class="tickets-container">
-                  <div 
-                    v-for="tkt in activeSession.tickets" 
-                    :key="tkt.id" 
-                    class="ticket-item-row"
-                    :class="{ disabled: tkt.is_soldout || tkt.is_finish }"
-                  >
-                    <div class="ticket-header" @click="toggleTicketExpand(tkt.id)">
-                      <div class="ticket-title-area">
-                        <h4>{{ tkt.name }}</h4>
-                        <div class="ticket-status-tag" :class="getStatusClass(tkt)">
-                          {{ getStatusLabel(tkt) }}
-                        </div>
-                      </div>
-                      <div class="ticket-price-icon">
-                        <span class="price-val">{{ formatPrice(tkt.price) }}</span>
-                        <svg class="chevron" :class="{ rotated: expandedTicketId === tkt.id }" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                          <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                      </div>
-                    </div>
-
-                    <div class="ticket-expand-body" v-if="expandedTicketId === tkt.id">
-                      <div class="ticket-meta-info">
-                        <div class="meta-row">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                          <span>Masa berlaku: <strong>{{ getFormattedDate(tkt.ticket_end) }}</strong></span>
-                        </div>
-                        <div class="meta-row">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                          <span>Tidak Bisa Refund &amp; Reschedule</span>
-                        </div>
-                        <div class="meta-row">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                          <span>Konfirmasi Instan</span>
-                        </div>
-                      </div>
-                      <div v-if="tkt.is_bundling_merch" class="bundling-section">
-                        <div class="bundling-title">Pilih Merchandise</div>
-                        <div class="merch-grid">
-                          <div v-for="merch in mockMerchandise" :key="merch.id" class="merch-card" :class="{ active: selectedMerchId === merch.id }" @click="selectMerch(merch.id)">
-                            <div class="merch-img"><img :src="merch.image" :alt="merch.name" /></div>
-                            <span>{{ merch.name }}</span>
-                          </div>
-                        </div>
-                        <div v-if="selectedMerchId" class="size-section">
-                          <div class="bundling-title">Pilih Ukuran</div>
-                          <div class="size-options">
-                            <button v-for="sz in ['S', 'M', 'L', 'XL', 'XXL']" :key="sz" :class="{ active: selectedSize === sz }" @click="selectedSize = sz">{{ sz }}</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="ticket-action-bar">
-                      <button v-if="!getTicketCount(tkt.id)" class="tambah-btn" :disabled="tkt.is_soldout || tkt.is_finish" @click="updateTicketQty(tkt.id, 1)">Tambah</button>
-                      <div v-else class="qty-selector">
-                        <button class="qty-btn" @click="updateTicketQty(tkt.id, -1)">-</button>
-                        <span class="qty-val">{{ getTicketCount(tkt.id) }}</span>
-                        <button class="qty-btn" @click="updateTicketQty(tkt.id, 1)">+</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="sidebar-footer">
-                  <div class="sidebar-total-row">
-                    <div class="total-label">
-                      <span>Total Harga</span>
-                      <small>({{ totalCount }} Tiket)</small>
-                    </div>
-                    <div class="total-price-val">{{ formatPrice(totalSubtotal) }}</div>
-                  </div>
-                  <button class="checkout-btn" :disabled="!totalCount" @click="handleCheckout">Beli Tiket Sekarang</button>
-                </div>
+          <!-- Tanggal / Tiket -->
+          <div class="info-section" v-show="activeContentTab === 'tiket'" id="sec-tiket">
+            <h2>
+              <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/>
+                <path d="M12 3v9"/>
+                <path d="m9 6 3-3 3 3"/>
+                <rect x="3" y="6" width="18" height="6" rx="1"/>
+              </svg>
+              Pilih Tanggal
+            </h2>
+            <div class="section-content">
+              <div class="dates-table-wrapper">
+                <table class="dates-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>City</th>
+                      <th>Venue</th>
+                      <th>Country</th>
+                      <th>Tiket</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="session in tour.sessions" :key="session.id" class="date-row">
+                      <td class="date-cell">{{ getFormattedDate(session.session_date) }}</td>
+                      <td class="city-cell">{{ tour.location_city }}</td>
+                      <td class="venue-cell">{{ tour.venue_name }}</td>
+                      <td class="country-cell">{{ tour.location_country }}</td>
+                      <td class="ticket-cell">
+                        <button class="btn btn-gold btn-sm" @click="handleCheckout">Beli Tiket</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
           <!-- Lokasi -->
-          <div v-show="activeContentTab === 'lokasi'" ref="sectionLokasi" class="tab-panel">
-            <div class="info-section">
-              <h2>
-                <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
-                </svg>
-                Lokasi
-              </h2>
-              <div class="section-content">
-                <div class="lokasi-detail">
-                  <div class="lokasi-row">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <div>
-                      <div class="lokasi-venue">{{ tour.venue_name }}</div>
-                      <div class="lokasi-city">{{ tour.location_city }}</div>
-                    </div>
+          <div class="info-section" v-show="activeContentTab !== 'tiket'" id="sec-lokasi">
+            <h2>
+              <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              Lokasi
+            </h2>
+            <div class="section-content">
+              <div class="lokasi-detail">
+                <div class="lokasi-row">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <div>
+                    <div class="lokasi-venue">{{ tour.venue_name }}</div>
+                    <div class="lokasi-city">{{ tour.location_city }}</div>
                   </div>
-                  <a :href="tour.map_link" target="_blank" class="maps-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Lihat di Google Maps
-                  </a>
                 </div>
+                <a :href="tour.map_link" target="_blank" class="maps-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  Lihat di Google Maps
+                </a>
               </div>
             </div>
           </div>
 
           <!-- Syarat & Ketentuan -->
-          <div v-show="activeContentTab === 'ketentuan'" ref="sectionKetentuan" class="tab-panel">
-            <div class="info-section">
-              <h2>
-                <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                  <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-                Syarat &amp; Ketentuan
-              </h2>
-              <div class="section-content">
-                <div class="terms-modern">
-                  <div class="term-block html-content" v-html="tour.term_condition"></div>
-                  <div class="terms-sections-modern">
-                    <div v-for="(sec, si) in dummyTermsSections" :key="si" class="terms-group-modern">
-                      <h3 class="terms-group-title-modern">{{ sec.title }}</h3>
-                      <ul class="terms-list-modern">
-                        <li v-for="(item, ii) in sec.items" :key="ii">
-                          <span class="term-num">{{ String(si + 1) }}.{{ String(ii + 1).padStart(2, '0') }}</span>
-                          <span class="term-text">{{ item }}</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+          <div class="info-section" v-show="activeContentTab !== 'tiket'" id="sec-ketentuan">
+            <h2>
+              <svg class="title-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Syarat &amp; Ketentuan
+            </h2>
+            <div class="section-content">
+              <div class="html-content" v-html="tour.term_condition"></div>
+              <div class="terms-sections">
+                <div v-for="(sec, si) in dummyTermsSections" :key="si" class="terms-group">
+                  <h3 class="terms-group-title">{{ sec.title }}</h3>
+                  <ul class="terms-list">
+                    <li v-for="(item, ii) in sec.items" :key="ii">
+                      <span class="terms-bullet"></span>
+                      {{ item }}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -390,8 +267,7 @@
       </div>
     </div>
 
-    <!-- Mobile Sticky Bottom Bar (visible on mobile & tab deskripsi) -->
-    <div class="mobile-sticky-bottom" :class="{ 'show-on-deskripsi': activeContentTab === 'deskripsi' }">
+    <div class="mobile-sticky-bottom">
       <div class="bottom-container">
         <div class="bottom-price-info">
           <span class="lbl">Total Harga</span>
@@ -415,7 +291,7 @@
         <div class="drawer-header">
           <div class="drawer-handle"></div>
           <div class="drawer-title-row">
-            <h3>Pilih Tiket</h3>
+            <h3>Pilih Tanggal</h3>
             <button class="close-drawer-btn" @click="isDrawerOpen = false">Selesai</button>
           </div>
         </div>
@@ -566,19 +442,77 @@ const indicatorStyle = computed(() => {
   return {
     transform: `translateX(${btnRect.left - parentRect.left}px)`,
     width: btnRect.width + 'px',
-    opacity: 1
+    opacity: 1,
+    transition: 'transform 0.3s ease, width 0.3s ease'
   }
 })
 
-// Scroll to section without switching tab
+// Scroll to section — switches tab for tiket, scroll+highlight for others
 const scrollToSection = (section) => {
-  highlightedTab.value = section
-  const el = document.getElementById('sec-' + section)
-  if (el) {
-    const y = el.getBoundingClientRect().top + window.scrollY - 90
-    window.scrollTo({ top: y, behavior: 'smooth' })
+  if (section === 'tiket') {
+    activeContentTab.value = 'tiket'
+    highlightedTab.value = 'tiket'
+    nextTick(() => {
+      const el = document.getElementById('sec-tiket')
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 90
+        window.scrollTo({ top: y, behavior: 'smooth' })
+      }
+    })
+    return
   }
+  // Other tabs: show main panel and scroll to section
+  activeContentTab.value = 'deskripsi'
+  highlightedTab.value = section
+  nextTick(() => {
+    const el = document.getElementById('sec-' + section)
+    if (el) {
+      const offset = 90
+      const y = el.getBoundingClientRect().top + window.scrollY - offset
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
+  })
 }
+
+// Track scroll position to highlight active tab (only main panel sections)
+let scrollObserver = null
+const sectionIds = ['deskripsi', 'lokasi', 'ketentuan']
+
+const initScrollObserver = () => {
+  if (scrollObserver) scrollObserver.disconnect()
+  scrollObserver = new IntersectionObserver((entries) => {
+    let maxBottom = 0
+    let bottommostId = 'deskripsi'
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        const bottom = entry.boundingClientRect.bottom
+        if (bottom > maxBottom) {
+          maxBottom = bottom
+          bottommostId = entry.target.id.replace('sec-', '')
+        }
+      }
+    }
+    highlightedTab.value = bottommostId
+  }, {
+    rootMargin: '-80px 0px -40% 0px',
+    threshold: 0
+  })
+
+  nextTick(() => {
+    for (const id of sectionIds) {
+      const el = document.getElementById('sec-' + id)
+      if (el) scrollObserver.observe(el)
+    }
+  })
+}
+
+onMounted(() => {
+  initScrollObserver()
+})
+
+onUnmounted(() => {
+  if (scrollObserver) scrollObserver.disconnect()
+})
 
 // Mock Merchandise
 const mockMerchandise = [
@@ -626,9 +560,11 @@ const getDayName = (dateStr) => {
 }
 
 const getFormattedDate = (dateStr) => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
   const d = new Date(dateStr)
-  return `${d.getDate()} ${months[d.getMonth()]}`
+  const day = String(d.getDate()).padStart(2, '0')
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const year = d.getFullYear()
+  return `${day}.${month}.${year}`
 }
 
 const formatPrice = (price) => {
@@ -770,17 +706,15 @@ const allToursDetails = [
     end_time: '23:00',
     venue_name: 'SO36',
     location_city: 'Berlin',
+    location_country: 'Germany',
     map_link: 'https://maps.google.com/?q=SO36+Berlin',
     description: `<p>Hardcore legends <strong>IGNITE</strong> and Canadian punk-metal powerhouses <strong>CANCER BATS</strong> team up for a massive co-headlining tour in Europe. Expect high-energy riffs, circle pits, and anthems that defined a generation.</p><p>After a long hiatus, IGNITE returns to the European stage with their signature blend of melodic hardcore and punk energy. Joined by CANCER BATS, who have been tearing up stages worldwide with their ferocious live performances, this is a show no fan of heavy music should miss. The tour will feature songs from both bands&#39; extensive catalogs, including fan favorites and deep cuts that have rarely been performed live.</p><p>Special guests will be announced in the coming weeks. This promises to be one of the most intense live music experiences of the year, with both bands known for their electrifying stage presence and ability to ignite any crowd. Doors open at 18:00, with the first support act taking the stage at 19:00 sharp. Limited VIP packages are available that include early entry, exclusive merch, and a meet-and-greet opportunity with the bands.</p><p>Don&#39;t miss your chance to witness these two powerhouse acts share the same stage for what promises to be an unforgettable night of pure, unadulterated heavy music. Get your tickets now before they sell out!</p>`,
     sessions: [
-      {
-        id: 101,
-        session_date: '2026-09-12',
-        tickets: [
-          { id: 1001, name: 'General Admission', price: 120000, ticket_end: '2026-09-11', is_soldout: 0, is_finish: 0 },
-          { id: 1002, name: 'VIP Pass (Incl. Merch)', price: 300000, ticket_end: '2026-09-11', is_soldout: 0, is_finish: 0, is_bundling_merch: true }
-        ]
-      }
+      { id: 101, session_date: '2026-09-12', tickets: [{ id: 1001, name: 'General Admission', price: 120000, ticket_end: '2026-09-11', is_soldout: 0, is_finish: 0 }, { id: 1002, name: 'VIP Pass (Incl. Merch)', price: 300000, ticket_end: '2026-09-11', is_soldout: 0, is_finish: 0, is_bundling_merch: true }] },
+      { id: 102, session_date: '2026-09-13', tickets: [{ id: 1003, name: 'General Admission', price: 120000, ticket_end: '2026-09-12', is_soldout: 0, is_finish: 0 }, { id: 1004, name: 'VIP Pass', price: 300000, ticket_end: '2026-09-12', is_soldout: 0, is_finish: 0, is_bundling_merch: true }] },
+      { id: 103, session_date: '2026-09-15', tickets: [{ id: 1005, name: 'Regular Ticket', price: 130000, ticket_end: '2026-09-14', is_soldout: 0, is_finish: 0 }] },
+      { id: 104, session_date: '2026-09-18', tickets: [{ id: 1006, name: 'Regular Ticket', price: 130000, ticket_end: '2026-09-17', is_soldout: 0, is_finish: 0 }] },
+      { id: 105, session_date: '2026-09-20', tickets: [{ id: 1007, name: 'Early Bird', price: 90000, ticket_end: '2026-09-15', is_soldout: 1, is_finish: 0 }] },
     ]
   },
   {
@@ -793,20 +727,15 @@ const allToursDetails = [
     end_time: '23:30',
     venue_name: 'Mammothfest',
     location_city: 'Thessaloniki',
+    location_country: 'Greece',
     map_link: 'https://maps.google.com/?q=Thessaloniki+Greece',
     description: `<p>UK Extreme metal pioneers <strong>CARCASS</strong> are hitting Europe for a series of skull-crushing summer shows. Prepare for an evening of grinding riffs and melodic death metal masterclass.</p><p>As one of the most influential bands in extreme metal history, CARCASS brings their legendary sound to Thessaloniki for what promises to be a devastating night of pure metal mayhem. The band will be performing tracks from their entire discography, spanning from their early grindcore classics like \"Reek of Putrefaction\" to the melodic death metal mastery of \"Heartwork\" and beyond.</p><p>This summer tour marks the band&#39;s return to Greece after several years, and they&#39;ve promised to bring a setlist that will satisfy both old-school fans and newer converts. Joining them on this date will be a selection of local support acts handpicked by the band themselves, showcasing the best of the Greek underground metal scene.</p><p>Expect a production that matches the magnitude of the music, with state-of-the-art lighting and sound systems ensuring that every crushing riff and blistering solo is heard in crystal clarity. Limited VIP experience packages are available, including exclusive merchandise and meet-and-greet passes. Early arrival is recommended to secure the best viewing positions for this sold-out-in-anticipation event.</p>`,
     
     sessions: [
-      {
-        id: 201,
-        session_date: '2026-06-05',
-        tickets: [
-          { id: 2001, name: 'Presale 1 - Standing', price: 100000, ticket_end: '2026-05-30', is_soldout: 0, is_finish: 0 },
-          { id: 2002, name: 'Regular - Standing Pit', price: 150000, ticket_end: '2026-06-04', is_soldout: 0, is_finish: 0 },
-          { id: 2003, name: 'Tribune Seated', price: 200000, ticket_end: '2026-06-04', is_soldout: 0, is_finish: 0 },
-          { id: 2004, name: 'Carcass VIP Bundling (T-Shirt)', price: 350000, ticket_end: '2026-05-25', is_soldout: 0, is_finish: 0, is_bundling_merch: true }
-        ]
-      }
+      { id: 201, session_date: '2026-06-05', tickets: [{ id: 2001, name: 'Presale 1 - Standing', price: 100000, ticket_end: '2026-05-30', is_soldout: 0, is_finish: 0 }, { id: 2002, name: 'Regular - Standing Pit', price: 150000, ticket_end: '2026-06-04', is_soldout: 0, is_finish: 0 }, { id: 2003, name: 'Tribune Seated', price: 200000, ticket_end: '2026-06-04', is_soldout: 0, is_finish: 0 }, { id: 2004, name: 'Carcass VIP Bundling (T-Shirt)', price: 350000, ticket_end: '2026-05-25', is_soldout: 0, is_finish: 0, is_bundling_merch: true }] },
+      { id: 202, session_date: '2026-06-06', tickets: [{ id: 2005, name: 'General Admission', price: 120000, ticket_end: '2026-06-05', is_soldout: 0, is_finish: 0 }] },
+      { id: 203, session_date: '2026-06-08', tickets: [{ id: 2006, name: 'Regular Ticket', price: 140000, ticket_end: '2026-06-07', is_soldout: 1, is_finish: 0 }] },
+      { id: 204, session_date: '2026-06-10', tickets: [{ id: 2007, name: 'Standing Ticket', price: 110000, ticket_end: '2026-06-09', is_soldout: 0, is_finish: 0 }] },
     ]
   },
   {
@@ -819,17 +748,16 @@ const allToursDetails = [
     end_time: '22:30',
     venue_name: 'Huxleys Neue Welt',
     location_city: 'Berlin',
+    location_country: 'Germany',
     map_link: 'https://maps.google.com/?q=Huxleys+Berlin',
     description: `<p>The legendary <strong>BAD BOYS FOR LIFE</strong> package is back! Featuring <strong>THE BONES</strong> and a stellar lineup of special guests to deliver old-school rock and roll combined with hard-hitting street punk.</p><p>This year&#39;s BAD BOYS FOR LIFE tour promises to be the biggest yet, with an expanded lineup and a production that pushes the boundaries of what a punk and rock tour can deliver. THE BONES headline this massive package, bringing their trademark blend of street punk, hard rock, and rebellious anthems that have earned them a devoted following across Europe and beyond.</p><p>Joining them on stage will be a rotating cast of special guests, including members of some of the most respected bands in the punk and hardcore scene. Each night promises a unique experience with surprise collaborations and rare performances of classic songs that have shaped the genre over the past two decades.</p><p>The tour will also feature an expansive merch area with exclusive tour-only items, limited edition vinyl pressings, and collaborative apparel designs. Early entry ticket holders will have access to an exclusive pre-show party with acoustic performances and Q&A sessions with the artists. This is more than just a concert - it&#39;s a celebration of the punk and rock lifestyle that has united fans across generations.</p>`,
     sessions: [
-      {
-        id: 301,
-        session_date: '2026-10-10',
-        tickets: [
-          { id: 3001, name: 'Regular Ticket', price: 180000, ticket_end: '2026-10-09', is_soldout: 0, is_finish: 0 },
-          { id: 3002, name: 'Exclusive Bundling Pack', price: 320000, ticket_end: '2026-10-01', is_soldout: 0, is_finish: 0, is_bundling_merch: true }
-        ]
-      }
+      { id: 301, session_date: '2026-10-10', tickets: [{ id: 3001, name: 'Regular Ticket', price: 180000, ticket_end: '2026-10-09', is_soldout: 0, is_finish: 0 }, { id: 3002, name: 'Exclusive Bundling Pack', price: 320000, ticket_end: '2026-10-01', is_soldout: 0, is_finish: 0, is_bundling_merch: true }] },
+      { id: 302, session_date: '2026-10-11', tickets: [{ id: 3003, name: 'Regular Ticket', price: 180000, ticket_end: '2026-10-10', is_soldout: 0, is_finish: 0 }] },
+      { id: 303, session_date: '2026-10-13', tickets: [{ id: 3004, name: 'VIP Package', price: 350000, ticket_end: '2026-10-12', is_soldout: 0, is_finish: 0, is_bundling_merch: true }] },
+      { id: 304, session_date: '2026-10-15', tickets: [{ id: 3005, name: 'Early Bird', price: 130000, ticket_end: '2026-10-01', is_soldout: 1, is_finish: 0 }] },
+      { id: 305, session_date: '2026-10-17', tickets: [{ id: 3006, name: 'Regular Ticket', price: 180000, ticket_end: '2026-10-16', is_soldout: 0, is_finish: 0 }] },
+      { id: 306, session_date: '2026-10-18', tickets: [{ id: 3007, name: 'Regular Ticket', price: 180000, ticket_end: '2026-10-17', is_soldout: 0, is_finish: 0 }] },
     ]
   },
   {
@@ -842,18 +770,16 @@ const allToursDetails = [
     end_time: '23:00',
     venue_name: 'Backstage Halle',
     location_city: 'Munich',
+    location_country: 'Germany',
     map_link: 'https://maps.google.com/?q=Backstage+Munich',
     description: `<p>The undisputed kings of Crossover thrash, <strong>D.R.I. (Dirty Rotten Imbeciles)</strong>, are celebrating their 43rd anniversary. A tour packed with speed, attitude, and classic thrash metal hymns.</p><p>Formed in 1982 in Houston, Texas, D.R.I. have been at the forefront of the crossover thrash movement for over four decades, blending the intensity of hardcore punk with the technical precision of thrash metal. This anniversary tour celebrates their incredible journey and features a career-spanning setlist that includes classics from definitive albums like \"Dealing With It\", \"Crossover\", and \"Thrash Zone\".</p><p>Fans can expect a high-energy performance that showcases the band&#39;s signature sound - lightning-fast riffs, pounding drums, and socially conscious lyrics that have never been more relevant than they are today. The band has stated that this may be one of their most extensive European tours in years, making it a must-see event for any fan of heavy music.</p><p>The Munich date will be held at the legendary Backstage Halle, a venue known for its incredible acoustics and intimate atmosphere that puts fans right in the middle of the action. Support will come from some of Europe&#39;s most promising crossover acts, handpicked by the band themselves. This is a celebration of 43 years of uncompromising music, and you won&#39;t want to miss it.</p>`,
     term_condition: '<p>- Tiket dapat ditransfer maksimal 1 hari sebelum acara.<br>- Penjualan tiket OTS dilayani jika slot masih tersedia.</p>',
     sessions: [
-      {
-        id: 401,
-        session_date: '2026-07-18',
-        tickets: [
-          { id: 4001, name: 'Presale Early Bird', price: 90000, ticket_end: '2026-06-30', is_soldout: 0, is_finish: 0 },
-          { id: 4002, name: 'Regular Ticket', price: 130000, ticket_end: '2026-07-17', is_soldout: 0, is_finish: 0 }
-        ]
-      }
+      { id: 401, session_date: '2026-07-18', tickets: [{ id: 4001, name: 'Presale Early Bird', price: 90000, ticket_end: '2026-06-30', is_soldout: 0, is_finish: 0 }, { id: 4002, name: 'Regular Ticket', price: 130000, ticket_end: '2026-07-17', is_soldout: 0, is_finish: 0 }] },
+      { id: 402, session_date: '2026-07-19', tickets: [{ id: 4003, name: 'Regular Ticket', price: 130000, ticket_end: '2026-07-18', is_soldout: 0, is_finish: 0 }] },
+      { id: 403, session_date: '2026-07-21', tickets: [{ id: 4004, name: 'VIP Experience', price: 280000, ticket_end: '2026-07-20', is_soldout: 0, is_finish: 0, is_bundling_merch: true }] },
+      { id: 404, session_date: '2026-07-23', tickets: [{ id: 4005, name: 'General Admission', price: 110000, ticket_end: '2026-07-22', is_soldout: 0, is_finish: 0 }] },
+      { id: 405, session_date: '2026-07-25', tickets: [{ id: 4006, name: 'Regular Ticket', price: 130000, ticket_end: '2026-07-24', is_soldout: 0, is_finish: 0 }] },
     ]
   }
 ]
@@ -866,15 +792,16 @@ const getTourDetails = (id) => {
   return {
     id: numericId,
     creator: 'M.A.D. Tourbooking',
-    title: 'M.A.D. Upcoming Tour',
+    title: 'M.A.D. AllTour',
     image: 'https://mad-tourbooking.de/media/Post-W-Dates-720x900.jpg',
     date: '31 Des 2026',
     start_time: '19:00',
     end_time: '23:00',
     venue_name: 'SO36 Berlin',
     location_city: 'Berlin',
+    location_country: 'Germany',
     map_link: 'https://maps.google.com/?q=Berlin+SO36',
-    description: '<p>M.A.D. Tourbooking presents an unforgettable night of music. Gather your friends and experience this performance live.</p><p>This upcoming show promises to deliver an incredible evening featuring some of the most exciting acts in the heavy music scene today. The lineup includes a carefully curated selection of both established headliners and emerging talent, ensuring a diverse and electrifying experience for all attendees.</p><p>The venue offers excellent sightlines from every angle, state-of-the-art sound systems, and a comfortable climate-controlled environment. A full bar will be available throughout the evening, serving a wide selection of beers, cocktails, and non-alcoholic beverages. Food vendors will also be on-site offering a variety of options to keep you fueled throughout the night.</p><p>Ticket holders are encouraged to arrive early to take advantage of the pre-show activities and to secure the best viewing positions. VIP ticket holders will enjoy exclusive access to a dedicated lounge area with private bar service and premium viewing areas. Stay tuned for additional lineup announcements and special surprises leading up to the event date.</p>',
+    description: '<p>M.A.D. Tourbooking presents an unforgettable night of music. Gather your friends and experience this performance live.</p><p>This All Tours show promises to deliver an incredible evening featuring some of the most exciting acts in the heavy music scene today. The lineup includes a carefully curated selection of both established headliners and emerging talent, ensuring a diverse and electrifying experience for all attendees.</p><p>The venue offers excellent sightlines from every angle, state-of-the-art sound systems, and a comfortable climate-controlled environment. A full bar will be available throughout the evening, serving a wide selection of beers, cocktails, and non-alcoholic beverages. Food vendors will also be on-site offering a variety of options to keep you fueled throughout the night.</p><p>Ticket holders are encouraged to arrive early to take advantage of the pre-show activities and to secure the best viewing positions. VIP ticket holders will enjoy exclusive access to a dedicated lounge area with private bar service and premium viewing areas. Stay tuned for additional lineup announcements and special surprises leading up to the event date.</p>',
     term_condition: '<p>- Tiket tidak dapat dibatalkan.<br>- Pajak 10% sudah termasuk.</p>',
     sessions: [
       {
@@ -894,32 +821,11 @@ onMounted(() => {
   updateCountdown()
   intervalId = setInterval(updateCountdown, 1000)
 
-  // Scroll listener to highlight active tab
-  const handleScroll = () => {
-    const sections = ['deskripsi', 'tiket', 'lokasi', 'ketentuan']
-    let current = 'deskripsi'
-    for (const s of sections) {
-      const el = document.getElementById('sec-' + s)
-      if (el) {
-        const rect = el.getBoundingClientRect()
-        if (rect.top <= 140) {
-          current = s
-        }
-      }
-    }
-    highlightedTab.value = current
-  }
-  window.addEventListener('scroll', handleScroll, { passive: true })
-  // Store for cleanup
-  window.__tourScrollHandler = handleScroll
+  // Scroll listener removed - tab indicator stays fixed on active tab
 })
 
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId)
-  if (window.__tourScrollHandler) {
-    window.removeEventListener('scroll', window.__tourScrollHandler)
-    delete window.__tourScrollHandler
-  }
 })
 </script>
 
@@ -936,7 +842,7 @@ onUnmounted(() => {
 .details-hero {
   position: relative;
   min-height: 420px;
-  padding: 60px 0 40px;
+  padding: 100px 0 40px;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -1143,7 +1049,7 @@ onUnmounted(() => {
   font-size: 0.6875rem;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0.5px;
 }
 
@@ -1415,7 +1321,7 @@ onUnmounted(() => {
   border-radius: 4px;
   margin-bottom: 24px;
   font-size: 0.875rem;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 1px;
 }
 
@@ -1450,7 +1356,156 @@ onUnmounted(() => {
   font-weight: 500;
 }
 
-/* Sessions Selector Tab Styling */
+/* Dates Table inside Tiket Tab (like DatesPage) */
+.detail-dates-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.detail-dates-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  font-size: 0.875rem;
+}
+
+.detail-dates-table thead {
+  background: #171717;
+  color: #ffffff;
+}
+
+.detail-dates-table th {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  text-transform: capitalize;
+  letter-spacing: 0.8px;
+  padding: 12px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.detail-dates-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.detail-date-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.detail-date-row:hover {
+  background: #f5f5f5;
+}
+
+.detail-date-row.active-row {
+  background: #f0f0f0;
+}
+
+.detail-date-cell {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  color: #171717;
+}
+
+.detail-city-cell {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dates-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.dates-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-white);
+  font-size: 0.9375rem;
+}
+
+.dates-table thead {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.dates-table th {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  letter-spacing: 1px;
+  padding: 16px 20px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.dates-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.date-row:hover {
+  background: var(--color-bg-alt);
+}
+
+.date-cell {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  color: var(--color-primary);
+}
+
+.city-cell {
+  font-weight: 600;
+}
+
+.venue-cell {
+  color: var(--color-text-light);
+}
+
+.ticket-cell {
+  text-align: left;
+}
+
+.country-cell {
+  color: var(--color-text-light);
+  font-size: 0.875rem;
+}
+
+.btn-sm {
+  padding: 6px 24px;
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 768px) {
+  .dates-table th,
+  .dates-table td {
+    padding: 12px 14px;
+  }
+
+  .dates-table {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dates-table-wrapper {
+    margin: 0 -16px;
+    border-radius: 0;
+  }
+}
 .session-tabs {
   display: flex;
   gap: 10px;
@@ -1489,7 +1544,7 @@ onUnmounted(() => {
   font-size: 0.6875rem;
   font-weight: 600;
   color: #9ca3af;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .session-tab-btn.active .day {
@@ -1546,7 +1601,7 @@ onUnmounted(() => {
   font-size: 0.5625rem;
   font-weight: 800;
   letter-spacing: 0.5px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   padding: 2px 6px;
   border-radius: 3px;
   width: fit-content;
@@ -1622,7 +1677,7 @@ onUnmounted(() => {
 .bundling-title {
   font-size: 0.6875rem;
   font-weight: 800;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0.5px;
   color: #9ca3af;
   margin-bottom: 8px;

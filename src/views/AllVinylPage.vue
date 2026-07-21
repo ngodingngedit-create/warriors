@@ -1,15 +1,5 @@
 <template>
   <div class="all-vinyl-page">
-    <!-- Hero Header -->
-    <section class="vinyl-hero">
-      <div class="container">
-        <span class="vinyl-badge">Revelations Records</span>
-        <h1 class="vinyl-hero-title">Vinyl Collection</h1>
-        <p class="vinyl-hero-subtitle">Explore our complete catalog of vinyl records — from classic albums to limited editions</p>
-      </div>
-    </section>
-
-    <!-- All Vinyl Grid -->
     <section class="section">
       <div class="container">
         <div class="grid grid-4 tours-grid">
@@ -161,75 +151,11 @@ const allVinyls = [
 
 <style scoped>
 .all-vinyl-page {
-  padding-top: 0;
+  padding-top: 100px;
 }
 
-/* Hero */
-.vinyl-hero {
-  position: relative;
-  padding: 160px 0 100px;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0d0d0d 100%);
-  text-align: center;
-  overflow: hidden;
-}
-
-.vinyl-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(180, 120, 60, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 50%, rgba(180, 120, 60, 0.10) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.vinyl-hero::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(180, 120, 60, 0.3), transparent);
-}
-
-.vinyl-badge {
-  display: inline-block;
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #b4783c;
-  background: rgba(180, 120, 60, 0.1);
-  border: 1px solid rgba(180, 120, 60, 0.2);
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 24px;
-}
-
-.vinyl-hero-title {
-  font-family: var(--font-heading);
-  font-size: 3.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: #fff;
-  margin: 0 0 16px;
-  line-height: 1.1;
-}
-
-.vinyl-hero-subtitle {
-  font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.5);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* Section */
 .section {
-  padding: 80px 0;
+  padding: 0 0 80px;
   background: #ffffff;
 }
 
@@ -246,23 +172,14 @@ const allVinyls = [
   .grid-4 {
     grid-template-columns: repeat(3, 1fr);
   }
-  .vinyl-hero-title {
-    font-size: 2.5rem;
-  }
 }
 
 @media (max-width: 768px) {
   .grid-4 {
     grid-template-columns: repeat(2, 1fr);
   }
-  .vinyl-hero {
-    padding: 130px 0 60px;
-  }
-  .vinyl-hero-title {
-    font-size: 2rem;
-  }
   .section {
-    padding: 48px 0;
+    padding: 0 0 48px;
   }
 }
 

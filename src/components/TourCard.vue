@@ -2,7 +2,7 @@
   <div class="tour-card">
     <!-- Media wrapper handles both the image and the ribbon badge to scale them together perfectly -->
     <div class="card-media-wrapper">
-      <div v-if="tour.badge" class="card-badge">{{ tour.badge }}</div>
+      <div v-if="tour.badge" class="card-badge" :class="{ 'card-badge--sold-out': tour.badge === 'Sold Out' }">{{ tour.badge }}</div>
 
       <router-link :to="computedLink" class="card-image">
         <img :src="tour.image" :alt="stripBr(tour.title)" loading="lazy" />
@@ -71,12 +71,17 @@ const stripBr = (title) => {
   position: relative;
   background: transparent;
   isolation: isolate;
+  max-width: 360px;
 }
 
 /* Media wrapper that scales on hover as a single unit */
 .card-media-wrapper {
   position: relative;
   width: 100%;
+  max-width: 360px;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 8px;
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: 1;
 }
@@ -117,16 +122,18 @@ const stripBr = (title) => {
   display: block;
   position: relative;
   overflow: hidden;
-  aspect-ratio: 12/5;
+  aspect-ratio: 16/9;
   border-radius: 8px;
   transition: box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background: #e8e8e8;
 }
 
 .card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease, opacity 0.3s ease;
 }
 
 .tour-card:hover .card-image {
@@ -148,6 +155,14 @@ const stripBr = (title) => {
   letter-spacing: 0.5px;
   z-index: 3;
   box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Sold Out badge overrides */
+.card-badge--sold-out {
+  background: #dc2626 !important;
+}
+.card-badge--sold-out::after {
+  background-color: #b91c1c !important;
 }
 
 /* Ribbon Bottom Fold Triangle */
@@ -194,9 +209,9 @@ const stripBr = (title) => {
 
 .card-date span {
   font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #828282;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #333333;
 }
 
 /* Divider */

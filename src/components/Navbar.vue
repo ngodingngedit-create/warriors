@@ -85,11 +85,10 @@
           </transition>
         </div>
 
-        <!-- Login / Profile -->
-        <button
+        <router-link
           v-if="!isLoggedIn"
+          to="/login"
           class="action-btn login-btn"
-          @click="isLoggedIn = true"
           aria-label="Login"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -97,11 +96,11 @@
             <circle cx="12" cy="7" r="4"/>
           </svg>
           <span class="login-text">Masuk</span>
-        </button>
+        </router-link>
         <button
           v-else
           class="action-btn profile-btn"
-          @click="isLoggedIn = false"
+          @click="authStore.isLoggedIn = false"
           aria-label="Profile"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -234,7 +233,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
               Cart <span v-if="cart.count > 0">({{ cart.count }})</span>
             </button>
-            <button class="mobile-action-btn" @click="isLoggedIn = !isLoggedIn">
+            <button class="mobile-action-btn" @click="authStore.isLoggedIn = !authStore.isLoggedIn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               {{ isLoggedIn ? 'Profile' : 'Masuk' }}
             </button>
@@ -248,22 +247,14 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { authStore } from '../stores/auth.js'
 
 const route = useRoute()
 const isScrolled = ref(false)
-const cartOpen = ref(false)
-const mobileMenuOpen = ref(false)
-const activeDropdown = ref(null)
-const showLang = ref(false)
-const mobileAccordion = ref(null)
-const isLoggedIn = ref(false)
+const isLoggedIn = computed(() => authStore.isLoggedIn)
 
-const isDarkHeader = computed(() => 
-  route.path.startsWith('/vinyl/') ||
-  route.path.startsWith('/artists') ||
-  route.path.startsWith('/labels/') ||
-  route.path.startsWith('/tours') ||
-  route.path.startsWith('/dates')
+const isDarkHeader = computed(() =>
+  route.path !== '/'
 )
 const headerClass = computed(() => ({
   scrolled: isScrolled.value || isDarkHeader.value
@@ -326,7 +317,7 @@ function addSampleItems() {
 const navLinks = [
   { path: '/', label: 'Home' },
     { path: '/tours', label: 'Tours', children: [
-    { path: '/tours', label: 'Upcoming', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 3l14 9-14 9V3z"/></svg>' },
+    { path: '/tours', label: 'All Tours', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 3l14 9-14 9V3z"/></svg>' },
     { path: '/dates', label: 'Tour Dates', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' },
   ]},
   {
@@ -341,14 +332,6 @@ const navLinks = [
         title: 'Label',
         items: [
           { path: '/revelations', label: 'Artist', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' },
-        ]
-      },
-      {
-        title: 'Music',
-        items: [
-          { path: '/revelations/music', label: 'Latest Releases', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>' },
-          { path: '/revelations/music/albums', label: 'Albums', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>' },
-          { path: '/revelations/music/singles', label: 'Singles & EPs', icon: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>' },
         ]
       },
       {
@@ -543,12 +526,12 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 }
 
 .accordion-dropdown {
-  min-width: 620px;
-  max-width: 780px;
-  padding: 16px 16px 16px 10px;
+  min-width: 0;
+  max-width: none;
+  padding: 12px 12px 12px 8px;
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 12px;
 }
 
 .accordion-section {

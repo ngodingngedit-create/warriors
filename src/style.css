@@ -212,7 +212,7 @@ p {
 /* Grid */
 .grid {
   display: grid;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .grid-3 {
@@ -225,6 +225,11 @@ p {
 
 .grid-4 {
   grid-template-columns: repeat(4, 1fr);
+}
+
+/* Consistent tighter gap for tour cards grid (both home and all tours) */
+.tours-grid {
+  gap: 12px;
 }
 
 /* Cards */

@@ -1,6 +1,6 @@
 <template>
   <div id="app-root">
-    <Navbar />
+    <Navbar v-if="route.path !== '/login'" />
     <main class="main-content">
       <router-view />
     </main>
@@ -8,7 +8,10 @@
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router'
 import Navbar from './components/Navbar.vue'
+
+const route = useRoute()
 </script>
 
 <style scoped>

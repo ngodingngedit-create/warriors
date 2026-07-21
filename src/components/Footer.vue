@@ -41,7 +41,7 @@
   font-weight: 800;
   letter-spacing: 1.5px;
   color: #ffffff;
-  text-transform: uppercase;
+  text-transform: capitalize;
   opacity: 0.8;
 }
 

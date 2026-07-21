@@ -9,9 +9,11 @@ import TourDetailsPage from '../views/TourDetailsPage.vue'
 import VinylDetailPage from '../views/VinylDetailPage.vue'
 import AllVinylPage from '../views/AllVinylPage.vue'
 import LabelVinylPage from '../views/LabelVinylPage.vue'
+import LoginPage from '../views/LoginPage.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
+  { path: '/login', name: 'Login', component: LoginPage },
   { path: '/tours', name: 'Tours', component: ToursPage },
   { path: '/tours/:id', name: 'TourDetails', component: TourDetailsPage },
   { path: '/dates', name: 'Dates', component: DatesPage },

@@ -188,7 +188,7 @@ function submitForm() {
   font-family: var(--font-heading);
   font-size: 0.875rem;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 1px;
   color: rgba(255, 255, 255, 0.6);
 }

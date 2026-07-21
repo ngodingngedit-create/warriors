@@ -126,7 +126,7 @@ const artists = [
   font-family: var(--font-heading);
   font-size: 0.75rem;
   color: #000000;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0.5px;
   font-weight: 600;
   opacity: 0.55;

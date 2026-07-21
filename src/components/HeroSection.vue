@@ -83,7 +83,7 @@ const props = defineProps({
   font-family: var(--font-heading);
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 2.5px;
   color: var(--color-white);
   margin-bottom: var(--space-xl);

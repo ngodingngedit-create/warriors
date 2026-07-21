@@ -1,14 +1,22 @@
 <template>
   <div class="dates-page">
-    <HeroSection
-      title="Tour Dates"
-      subtitle="All upcoming shows and events"
-      badge="2026 Schedule"
-    />
-
-    <section class="section">
+    <section class="section dates-section">
       <div class="container">
-        <h2 class="section-title">Upcoming Shows</h2>
+        <div class="dates-page-header">
+          <h2 class="section-title">Tour Dates</h2>
+        </div>
+
+        <!-- Year Filter -->
+        <div class="filter-bar">
+          <button
+            v-for="year in filterYears"
+            :key="year"
+            class="filter-btn"
+            :class="{ active: activeYear === year }"
+            @click="activeYear = year"
+          >{{ year }}</button>
+        </div>
+
         <div class="dates-table-wrapper">
           <table class="dates-table">
             <thead>
@@ -21,7 +29,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(date, idx) in tourDates" :key="idx" class="date-row">
+              <tr v-for="(date, idx) in filteredDates" :key="idx" class="date-row">
                 <td class="date-cell">{{ date.date }}</td>
                 <td class="city-cell">{{ date.city }}</td>
                 <td class="venue-cell">{{ date.venue }}</td>
@@ -45,10 +53,10 @@
 </template>
 
 <script setup>
-import HeroSection from '../components/HeroSection.vue'
+import { ref, computed } from 'vue'
 import Footer from '../components/Footer.vue'
 
-const tourDates = [
+const allDates = [
   { date: '05.08.2026', city: 'Birmingham', venue: 'The Flapper', country: 'United Kingdom', tourId: 1 },
   { date: '08.08.2026', city: 'Leisnig', venue: 'AJZ Leisnig', country: 'Germany', tourId: 1 },
   { date: '09.08.2026', city: 'Kassel', venue: 'Goldgrube', country: 'Germany', tourId: 1 },
@@ -80,9 +88,73 @@ const tourDates = [
   { date: '30.07.2026', city: 'Löbnitz', venue: 'Full Rewind', country: 'Germany', tourId: null },
   { date: '31.07.2026', city: 'Gränichen', venue: 'Open Air Gränichen', country: 'Switzerland', tourId: null },
 ]
+
+// Extract unique years from date strings (format: DD.MM.YYYY)
+const filterYears = computed(() => {
+  const years = new Set()
+  allDates.forEach(d => {
+    const parts = d.date.split('.')
+    if (parts.length === 3) years.add(parts[2])
+  })
+  return ['All', ...Array.from(years).sort()]
+})
+
+const activeYear = ref('All')
+
+const filteredDates = computed(() => {
+  if (activeYear.value === 'All') return allDates
+  return allDates.filter(d => d.date.endsWith(activeYear.value))
+})
 </script>
 
 <style scoped>
+.dates-section {
+  padding-top: 80px;
+}
+
+.dates-page-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+.dates-page-header .section-title {
+  margin-bottom: 24px;
+}
+
+/* Filter Bar */
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 100px;
+  border: 1.5px solid #ddd;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.filter-btn:hover {
+  border-color: #171717;
+  color: #171717;
+  background: #f8f8f8;
+}
+
+.filter-btn.active {
+  background: #171717;
+  color: #fff;
+  border-color: #171717;
+}
+
 .dates-table-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -106,7 +178,7 @@ const tourDates = [
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.75rem;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 1px;
   padding: 16px 20px;
   text-align: left;

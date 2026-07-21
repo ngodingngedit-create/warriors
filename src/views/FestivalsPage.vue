@@ -154,7 +154,7 @@ const festivals = [
   font-family: var(--font-heading);
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 1px;
   color: var(--color-accent);
 }

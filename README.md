@@ -36,7 +36,7 @@ warriors/
 
 | Page | Route | Key Content |
 |------|-------|-------------|
-| **Home** | `/` | Hero slider, Upcoming Tours, Branded Tours, Featured Artists, Punk & Disorderly Fest, Spotify Playlist |
+| **Home** | `/` | Hero slider, All Tours, Branded Tours, Featured Artists, Punk & Disorderly Fest, Spotify Playlist |
 | **Tours** | `/tours` | All tour packages with cards (images, excerpts, badges) |
 | **Dates** | `/dates` | Complete tour dates table (date/city/venue/country/tickets) |
 | **Festivals** | `/festivals` | Festival cards with details and ticket links |
