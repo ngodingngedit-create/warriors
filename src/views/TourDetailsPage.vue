@@ -72,17 +72,25 @@
                 </div>
               </div>
 
+              <div class="divider"></div>
+
               <!-- Simple Organizer Row & Share Button matching user reference image -->
               <div class="simple-organizer-row">
                 <div class="org-avatar-box">
-                  <img :src="tour.creatorImage || 'https://mad-tourbooking.de/media/DBD_Logo.png'" alt="Organizer" class="org-avatar-img" />
+                  <img v-if="tour.creatorImage" :src="tour.creatorImage" :alt="tour.creator" class="org-avatar-img" />
+                  <div v-else class="org-avatar-fallback">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polygon points="12 8 15 15 9 15"/>
+                    </svg>
+                  </div>
                 </div>
                 <div class="org-text-meta">
-                  <span class="org-lbl">Diselenggarakan Oleh</span>
-                  <span class="org-name-val">{{ tour.creator || 'Warriors Records' }}</span>
+                  <span class="org-lbl">Diselenggarakan oleh</span>
+                  <span class="org-name-val">{{ tour.creator || 'WARRIORS' }}</span>
                 </div>
                 <button class="simple-share-btn" @click="handleShare" title="Bagikan Event">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="18" cy="5" r="3"/>
                     <circle cx="6" cy="12" r="3"/>
                     <circle cx="18" cy="19" r="3"/>
@@ -91,6 +99,26 @@
                   </svg>
                 </button>
               </div>
+            </div>
+
+            <!-- Bottom Action Cards matching reference image -->
+            <div class="info-action-bar-card">
+              <button class="action-card-btn" @click="handleShare" title="Bagikan Event">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"/>
+                  <circle cx="6" cy="12" r="3"/>
+                  <circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+              </button>
+              <button class="action-card-btn" @click="handleChat" title="Hubungi Organizer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  <line x1="8" y1="9" x2="16" y2="9"/>
+                  <line x1="8" y1="13" x2="14" y2="13"/>
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -825,13 +853,13 @@ onUnmounted(() => {
 }
 
 /* Hero Section */
+/* Hero Section */
 .details-hero {
   position: relative;
   min-height: 420px;
-  padding: 100px 0 40px;
+  padding: 100px 0 50px;
   display: flex;
   align-items: flex-end;
-  overflow: hidden;
   color: #ffffff;
 }
 
@@ -844,6 +872,7 @@ onUnmounted(() => {
   transform: scale(1.1);
   opacity: 0.35;
   z-index: 0;
+  overflow: hidden;
 }
 
 .hero-overlay {
@@ -851,6 +880,7 @@ onUnmounted(() => {
   inset: 0;
   background: linear-gradient(to top, rgba(13, 13, 13, 0.95) 0%, rgba(13, 13, 13, 0.6) 60%, rgba(13, 13, 13, 0.3) 100%);
   z-index: 1;
+  overflow: hidden;
 }
 
 .hero-container {
@@ -930,7 +960,7 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: 2.2fr 1fr;
   gap: 24px;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 .banner-wrapper {
@@ -953,27 +983,28 @@ onUnmounted(() => {
 .info-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   height: 290px;
+  justify-content: space-between;
 }
 
 .info-bar-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #23201e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  padding: 16px 20px 10px;
+  padding: 14px 18px 12px;
   color: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 4px;
+  gap: 8px;
   flex: 1;
 }
 
 .info-card-top {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .info-card-bottom {
@@ -984,21 +1015,21 @@ onUnmounted(() => {
 
 .info-row {
   display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  gap: 12px;
+  align-items: center;
 }
 
 .info-row .icon {
   color: #ffffff;
   flex-shrink: 0;
-  margin-top: 2px;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .info-row .val {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.4;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
 }
 
 .info-row .val-group {
@@ -1021,71 +1052,133 @@ onUnmounted(() => {
 
 .info-bar-card .divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  margin: 2px 0;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 8px 0;
+  border: none;
 }
 
-.organizer-section {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.organizer-section .lbl {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: capitalize;
-  letter-spacing: 0.5px;
-}
-
-.organizer-badge {
+.simple-organizer-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
+  min-width: 0;
 }
 
-.org-logo {
+.simple-organizer-row .org-avatar-box {
   width: 36px;
   height: 36px;
-  background: #171717;
-  border-radius: 6px;
+  border-radius: 50%;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.org-logo .logo-text {
-  font-weight: 900;
-  font-size: 1.125rem;
-  color: #ffffff;
-  font-family: var(--font-heading);
+.simple-organizer-row .org-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.org-name {
-  font-size: 0.875rem;
-  font-weight: 700;
-}
-
-/* Action buttons below sidebar card */
-.action-buttons-row {
+.simple-organizer-row .org-avatar-fallback {
+  color: rgba(255, 255, 255, 0.7);
   display: flex;
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
 }
 
-.action-btn {
+.simple-organizer-row .org-text-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
   flex: 1;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  height: 48px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.simple-organizer-row .org-lbl {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
+
+.simple-organizer-row .org-name-val {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.simple-share-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.simple-share-btn:hover {
   color: #ffffff;
+  transform: scale(1.1);
+}
+
+/* Action buttons container matching reference image */
+.info-action-bar-card {
+  background: #23201e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  gap: 10px;
+  height: 58px;
+  box-sizing: border-box;
+}
+
+.info-action-bar-card .action-card-btn {
+  flex: 1;
+  height: 42px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.info-action-bar-card .action-card-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.info-action-bar-card .action-card-btn:active {
+  transform: scale(0.98);
+}
+
+.info-action-bar-card .action-card-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.info-action-bar-card .action-card-btn:active {
+  transform: scale(0.98);
 }
 
 .action-btn:hover {

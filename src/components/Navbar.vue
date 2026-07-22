@@ -280,17 +280,28 @@
             </div>
           </nav>
 
-          <!-- Mobile Actions (Cart, Login/Profile) -->
-          <div class="mobile-actions">
-            <button class="mobile-action-btn" @click="mobileMenuOpen = false; cartState.isOpen = true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              <span>Keranjang</span>
-              <span v-if="totalCartCount > 0" class="mobile-cart-badge">({{ totalCartCount }})</span>
-            </button>
+          <!-- Language Selector in Mobile Sidebar Drawer -->
+          <div class="mobile-lang-drawer">
+            <span class="mobile-lang-label">{{ t('common.select_lang') }}</span>
+            <div class="mobile-lang-buttons">
+              <button
+                v-for="lang in languages"
+                :key="lang.code"
+                class="mobile-lang-chip"
+                :class="{ active: lang.code === langState.current }"
+                @click="setLang(lang.code)"
+              >
+                <span class="lang-flag" v-html="lang.flag"></span>
+                <span>{{ lang.label }}</span>
+              </button>
+            </div>
+          </div>
 
+          <!-- Mobile Actions (Login/Profile) -->
+          <div class="mobile-actions">
             <router-link v-if="!isLoggedIn" to="/login" class="mobile-action-btn" @click="mobileMenuOpen = false">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              <span>Masuk</span>
+              <span>Profil / Masuk</span>
             </router-link>
             
             <button v-else class="mobile-action-btn" @click="authStore.isLoggedIn = false; mobileMenuOpen = false">
@@ -302,6 +313,21 @@
       </div>
     </transition>
   </header>
+
+  <!-- Bottom Mobile Navbar (Standalone Fixed Position Outside Header) -->
+  <nav class="mobile-bottom-nav" :class="{ 'nav-hidden': !showBottomNav }">
+    <router-link
+      v-for="item in bottomNavItems"
+      :key="item.path"
+      :to="item.path"
+      class="mobile-bottom-nav-item"
+      :class="{ active: isBottomNavActive(item) }"
+    >
+      <span v-if="isBottomNavActive(item)" class="mobile-bottom-nav-indicator"></span>
+      <span class="mobile-bottom-nav-icon" v-html="item.icon"></span>
+      <span class="mobile-bottom-nav-label">{{ item.label }}</span>
+    </router-link>
+  </nav>
 </template>
 
 <script setup>
@@ -324,6 +350,50 @@ const isScrolled = ref(false)
 const mobileMenuOpen = ref(false)
 const mobileAccordion = ref(null)
 const isLoggedIn = computed(() => authStore.isLoggedIn)
+
+// Detail Page Detection & Mobile Bottom Nav Visibility
+const isDetailPage = computed(() => {
+  const path = route.path
+  const detailNames = ['TourDetails', 'ArtistDetail', 'VinylDetail', 'MerchDetail', 'AccessoryDetail', 'Login']
+  if (detailNames.includes(route.name)) return true
+  return /\/(tours|artists|vinyl|merch|accessories|labels)\/[^/]+/.test(path)
+})
+
+const showBottomNav = computed(() => {
+  return !isDetailPage.value && !mobileMenuOpen.value && !cartState.isOpen
+})
+
+const bottomNavItems = computed(() => [
+  {
+    path: '/',
+    label: t('nav.home') || 'Home',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`
+  },
+  {
+    path: '/tours',
+    label: t('nav.tours') || 'Tour',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`
+  },
+  {
+    path: '/revelations/merch',
+    label: 'Merch',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`
+  },
+  {
+    path: '/artists',
+    label: t('nav.artists') || 'Artist',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`
+  }
+])
+
+const isBottomNavActive = (item) => {
+  const path = route.path
+  if (item.path === '/') return path === '/'
+  if (item.path === '/tours') return path.startsWith('/tours') || path.startsWith('/dates') || path.startsWith('/festivals')
+  if (item.path === '/revelations/merch') return path.startsWith('/revelations/merch') || path.startsWith('/revelations/releases') || path.startsWith('/merch')
+  if (item.path === '/artists') return path.startsWith('/artists')
+  return path === item.path
+}
 
 // Lock body scrolling when Cart Sidebar or Mobile Menu is open
 watch(() => cartState.isOpen, (isOpen) => {
@@ -1223,37 +1293,44 @@ onUnmounted(() => {
   top: 0;
   right: 0;
   width: 85%;
-  max-width: 380px;
+  max-width: 360px;
   height: 100vh;
-  background: #111;
-  padding: 24px;
+  background: #121212;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px 24px 40px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.7);
 }
 
 .mobile-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 20px;
 }
 
-.mobile-logo { max-width: 120px; }
+.mobile-logo { max-width: 130px; height: auto; }
 
 .mobile-close {
   background: none;
   border: none;
-  color: rgba(255,255,255,0.5);
-  font-size: 2.2rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.8rem;
   cursor: pointer;
   line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
 }
+.mobile-close:hover { color: #ffffff; }
 
 .mobile-nav { flex: 1; }
 
 .mobile-nav-item {
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .mobile-link-wrap {
@@ -1264,14 +1341,15 @@ onUnmounted(() => {
 
 .mobile-link {
   font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   padding: 14px 0;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.85);
   flex: 1;
   transition: color 0.2s;
+  line-height: 1.35;
 }
 
 .mobile-link:hover,
@@ -1280,7 +1358,7 @@ onUnmounted(() => {
 .mobile-arrow {
   background: none;
   border: none;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   padding: 14px 4px;
   transition: all 0.25s;
@@ -1300,13 +1378,13 @@ onUnmounted(() => {
   gap: 8px;
   padding: 10px 12px;
   font-size: 0.875rem;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255, 255, 255, 0.55);
   border-radius: 5px;
   transition: all 0.2s;
 }
 
 .mobile-sub-link:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: #fff;
   padding-left: 16px;
 }
@@ -1329,26 +1407,31 @@ onUnmounted(() => {
 }
 
 .mobile-actions {
-  padding: 24px 0 0;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 16px 0 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .mobile-action-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px;
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.7);
-  font-size: 0.9rem;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
   font-family: var(--font-heading);
   cursor: pointer;
-  border-radius: 5px;
-  transition: all 0.2s;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.mobile-action-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 .mobile-action-btn:hover {
   background: rgba(255,255,255,0.05);
@@ -1379,5 +1462,137 @@ onUnmounted(() => {
   .site-logo { max-width: 140px; }
   .scrolled .site-logo { max-width: 120px; }
   .login-text { display: none; }
+}
+
+/* Bottom Mobile Navbar & Mobile Adjustments */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .site-header .lang-wrapper,
+  .site-header .login-btn,
+  .site-header .profile-btn {
+    display: none !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 64px !important;
+    background: #141414 !important;
+    border-top-left-radius: 18px !important;
+    border-top-right-radius: 18px !important;
+    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.5) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    z-index: 99999 !important;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 4px;
+    backdrop-filter: blur(16px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  }
+
+  .mobile-bottom-nav.nav-hidden {
+    transform: translateY(100%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .mobile-bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 100%;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s ease;
+  }
+
+  .mobile-bottom-nav-item.active {
+    color: #ffffff;
+  }
+
+  .mobile-bottom-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-bottom-nav-item.active .mobile-bottom-nav-icon {
+    transform: translateY(-2px);
+  }
+
+  .mobile-bottom-nav-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+
+  /* Active Bar Indicator - White pill bar at top of active item */
+  .mobile-bottom-nav-indicator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    background: #ffffff;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Language selector in sidebar drawer */
+  .mobile-lang-drawer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mobile-lang-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+
+  .mobile-lang-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .mobile-lang-chip {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-lang-chip.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    color: #ffffff;
+  }
 }
 </style>
