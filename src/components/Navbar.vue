@@ -280,22 +280,6 @@
             </div>
           </nav>
 
-          <!-- Language Selector in Mobile Sidebar Drawer -->
-          <div class="mobile-lang-drawer">
-            <span class="mobile-lang-label">{{ t('common.select_lang') }}</span>
-            <div class="mobile-lang-buttons">
-              <button
-                v-for="lang in languages"
-                :key="lang.code"
-                class="mobile-lang-chip"
-                :class="{ active: lang.code === langState.current }"
-                @click="setLang(lang.code)"
-              >
-                <span class="lang-flag" v-html="lang.flag"></span>
-                <span>{{ lang.label }}</span>
-              </button>
-            </div>
-          </div>
 
           <!-- Mobile Actions (Login/Profile) -->
           <div class="mobile-actions">
@@ -1470,7 +1454,6 @@ onUnmounted(() => {
 }
 
 @media (max-width: 768px) {
-  .site-header .lang-wrapper,
   .site-header .login-btn,
   .site-header .profile-btn {
     display: none !important;
@@ -1550,49 +1533,15 @@ onUnmounted(() => {
     border-radius: 0 0 4px 4px;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
   }
+}
 
-  /* Language selector in sidebar drawer */
-  .mobile-lang-drawer {
-    padding: 16px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+@media (max-width: 480px) {
+  .lang-toggle-btn {
+    padding: 4px 7px;
+    gap: 4px;
   }
-
-  .mobile-lang-label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.5);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-  }
-
-  .mobile-lang-buttons {
-    display: flex;
-    gap: 10px;
-  }
-
-  .mobile-lang-chip {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .mobile-lang-chip.active {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: #ffffff;
-    color: #ffffff;
+  .lang-code-text {
+    font-size: 0.72rem;
   }
 }
 </style>
