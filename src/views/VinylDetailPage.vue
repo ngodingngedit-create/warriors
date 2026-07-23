@@ -36,7 +36,7 @@
           <div class="info-col">
             <div class="product-info">
               <h1 class="product-title">{{ vinyl.title }}</h1>
-              <div class="sold-text">Terjual {{ vinyl.sold }}</div>
+              <div class="sold-text">{{ langState.current === 'en' ? `${vinyl.sold} pcs sold` : `Terjual ${vinyl.sold} pcs` }}</div>
               <div class="product-price">{{ formatPrice(vinyl.price) }}</div>
             </div>
 
@@ -54,14 +54,14 @@
             </div>
 
             <div class="variant-section">
-              <div class="variant-label">Pilih Edisi : <strong>{{ selectedVariant }}</strong></div>
+              <div class="variant-label">{{ langState.current === 'en' ? 'Select Edition' : 'Pilih Edisi' }} : <strong>{{ displaySelectedVariant }}</strong></div>
               <div class="variant-buttons">
                 <button
-                  v-for="variant in variants"
-                  :key="variant"
+                  v-for="(variant, idx) in variantsList"
+                  :key="idx"
                   class="variant-btn"
-                  :class="{ active: selectedVariant === variant }"
-                  @click="selectedVariant = variant"
+                  :class="{ active: selectedVariantIndex === idx }"
+                  @click="selectedVariantIndex = idx"
                 >
                   {{ variant }}
                 </button>
@@ -70,19 +70,19 @@
 
             <div class="tabs-section">
               <div class="tabs-header">
-                <button class="tab-btn" :class="{ active: activeTab === 'deskripsi' }" @click="activeTab = 'deskripsi'">Deskripsi Produk</button>
-                <button class="tab-btn" :class="{ active: activeTab === 'ulasan' }" @click="activeTab = 'ulasan'">Ulasan ({{ vinyl.reviews }})</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'deskripsi' }" @click="activeTab = 'deskripsi'">{{ langState.current === 'en' ? 'Product Description' : 'Deskripsi Produk' }}</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'ulasan' }" @click="activeTab = 'ulasan'">{{ langState.current === 'en' ? `Reviews (${vinyl.reviews})` : `Ulasan (${vinyl.reviews})` }}</button>
               </div>
               <div class="tabs-content">
                 <div v-if="activeTab === 'deskripsi'" class="tab-panel">
                   <p class="desc-text">{{ vinyl.description }}</p>
-                  <h4 class="detail-heading">Detail Produk :</h4>
+                  <h4 class="detail-heading">{{ langState.current === 'en' ? 'Product Details :' : 'Detail Produk :' }}</h4>
                   <ul class="detail-list">
                     <li v-for="(item, idx) in vinyl.details" :key="idx">{{ item }}</li>
                   </ul>
                 </div>
                 <div v-else class="tab-panel">
-                  <p class="empty-text">Belum ada ulasan untuk produk ini.</p>
+                  <p class="empty-text">{{ langState.current === 'en' ? 'No reviews for this product yet.' : 'Belum ada ulasan untuk produk ini.' }}</p>
                 </div>
               </div>
             </div>
@@ -93,8 +93,8 @@
             <div class="order-panel">
               <div class="qty-section">
                 <div class="qty-header">
-                  <span class="qty-label">Jumlah</span>
-                  <span class="stock-text">Stok {{ vinyl.stock }}</span>
+                  <span class="qty-label">{{ t('cart.quantity') }}</span>
+                  <span class="stock-text">{{ langState.current === 'en' ? `Stock ${vinyl.stock}` : `Stok ${vinyl.stock}` }}</span>
                 </div>
                 <div class="qty-controls">
                   <button class="qty-btn" @click="decreaseQty" :disabled="quantity <= 1">−</button>
@@ -111,13 +111,13 @@
               <div class="order-actions">
                 <button class="btn-add-cart" @click="addToCart">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Tambah Keranjang
+                  {{ t('common.add_to_cart') }}
                 </button>
-                <button class="btn-buy-now" @click="buyNow">Beli Sekarang</button>
+                <button class="btn-buy-now" @click="buyNow">{{ t('common.buy_now') }}</button>
               </div>
 
               <div class="social-row">
-                <button class="social-btn" title="Bagikan">
+                <button class="social-btn" :title="t('detail.share_event')">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 </button>
                 <button class="social-btn" :class="{ favorited: isFavorite }" @click="isFavorite = !isFavorite" title="Favorit">
@@ -142,6 +142,7 @@
 import { useRoute } from 'vue-router'
 import { computed, ref } from 'vue'
 import Footer from '../components/Footer.vue'
+import { langState, t } from '../store/langState.js'
 
 const route = useRoute()
 
@@ -154,7 +155,9 @@ const vinylData = [
     stock: 5,
     reviews: 0,
     description: 'Ini adalah piringan hitam 180g edisi terbatas dari album ikonik "The Poison" oleh Bullet For My Valentine. Dicetak ulang dengan master audio asli untuk pengalaman mendengarkan analog terbaik. Dilengkapi dengan gatefold cover yang indah dan buklet lirik.',
+    descriptionEn: 'This is a 180g limited edition vinyl record of the iconic album "The Poison" by Bullet For My Valentine. Remastered with original master audio for the ultimate analog listening experience. Comes with a beautiful gatefold cover and lyric booklet.',
     details: ['Material : Vinyl 180g', 'Edisi : Gatefold Limited Edition', 'Warna : Hitam Klasik', 'Kondisi : Baru, Segel Pabrik', 'Label : Columbia / Visible Noise'],
+    detailsEn: ['Material : 180g Vinyl', 'Edition : Gatefold Limited Edition', 'Color : Classic Black', 'Condition : Brand New, Factory Sealed', 'Label : Columbia / Visible Noise'],
     coverImage: '/vinyl/vinyl(1).webp',
     vinylImage: '/vinyl/vinyl(2).webp',
   },
@@ -166,7 +169,9 @@ const vinylData = [
     stock: 3,
     reviews: 0,
     description: 'Ini adalah piringan hitam 180g 2xVinyl edisi terbatas dari album "Ashes of the Wake" oleh Lamb of God. Dicetak ulang dengan master audio asli untuk pengalaman mendengarkan analog terbaik.',
+    descriptionEn: 'This is a limited edition 180g 2xVinyl record of the album "Ashes of the Wake" by Lamb of God. Remastered with original master audio for the ultimate analog listening experience.',
     details: ['Material : Vinyl 180g', 'Format : 2xVinyl', 'Edisi : Gatefold Limited Edition', 'Kondisi : Baru, Segel Pabrik', 'Label : Epic / Prosthetic'],
+    detailsEn: ['Material : 180g Vinyl', 'Format : 2xVinyl', 'Edition : Gatefold Limited Edition', 'Condition : Brand New, Factory Sealed', 'Label : Epic / Prosthetic'],
     coverImage: '/vinyl/vinyl(1).webp',
     vinylImage: '/vinyl/vinyl(2).webp',
   },
@@ -178,7 +183,9 @@ const vinylData = [
     stock: 4,
     reviews: 0,
     description: 'Ini adalah piringan hitam 180g edisi terbatas dari album "The Blackening" oleh Machine Head. Dicetak ulang dengan master audio asli.',
+    descriptionEn: 'This is a limited edition 180g vinyl record of the album "The Blackening" by Machine Head. Remastered with original master audio.',
     details: ['Material : Vinyl 180g', 'Edisi : Limited Edition', 'Kondisi : Baru, Segel Pabrik', 'Label : Roadrunner Records'],
+    detailsEn: ['Material : 180g Vinyl', 'Edition : Limited Edition', 'Condition : Brand New, Factory Sealed', 'Label : Roadrunner Records'],
     coverImage: '/vinyl/vinyl(1).webp',
     vinylImage: '/vinyl/vinyl(2).webp',
   },
@@ -190,15 +197,23 @@ const vinylData = [
     stock: 6,
     reviews: 0,
     description: 'Ini adalah piringan hitam 180g edisi terbatas dari album "Chaos A.D." oleh Sepultura. Dicetak ulang dengan master audio asli.',
+    descriptionEn: 'This is a limited edition 180g vinyl record of the album "Chaos A.D." by Sepultura. Remastered with original master audio.',
     details: ['Material : Vinyl 180g', 'Edisi : Limited Edition', 'Kondisi : Baru, Segel Pabrik', 'Label : Roadrunner Records'],
+    detailsEn: ['Material : 180g Vinyl', 'Edition : Limited Edition', 'Condition : Brand New, Factory Sealed', 'Label : Roadrunner Records'],
     coverImage: '/vinyl/vinyl(1).webp',
     vinylImage: '/vinyl/vinyl(2).webp',
   }
 ]
 
 const vinyl = computed(() => {
+  const isEn = langState.current === 'en'
   const id = Number(route.params.id)
-  return vinylData.find(v => v.id === id) || vinylData[0]
+  const item = vinylData.find(v => v.id === id) || vinylData[0]
+  return {
+    ...item,
+    description: isEn ? item.descriptionEn : item.description,
+    details: isEn ? item.detailsEn : item.details
+  }
 })
 
 const images = computed(() => [vinyl.value.coverImage, vinyl.value.vinylImage, vinyl.value.coverImage, vinyl.value.vinylImage])
@@ -208,8 +223,17 @@ const setActiveImage = (idx) => { activeImage.value = idx }
 const prevThumb = () => { if (thumbOffset.value > 0) thumbOffset.value-- }
 const nextThumb = () => { if (thumbOffset.value < images.value.length - 4) thumbOffset.value++ }
 
-const variants = ['Standar Hitam', 'Warna Terbatas', 'Gatefold Deluxe', 'Edisi Tes Pres']
-const selectedVariant = ref('Standar Hitam')
+const selectedVariantIndex = ref(0)
+const variantsList = computed(() => {
+  const isEn = langState.current === 'en'
+  return isEn
+    ? ['Standard Black', 'Limited Color', 'Gatefold Deluxe', 'Test Press Edition']
+    : ['Standar Hitam', 'Warna Terbatas', 'Gatefold Deluxe', 'Edisi Tes Pres']
+})
+
+const displaySelectedVariant = computed(() => {
+  return variantsList.value[selectedVariantIndex.value] || variantsList.value[0]
+})
 
 const quantity = ref(1)
 const increaseQty = () => { if (quantity.value < vinyl.value.stock) quantity.value++ }
@@ -229,7 +253,7 @@ const buyNow = () => {
 }
 
 const formatPrice = (price) => {
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price)
+  return new Intl.NumberFormat(langState.current === 'en' ? 'en-US' : 'id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price)
 }
 </script>
 

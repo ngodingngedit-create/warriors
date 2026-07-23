@@ -33,7 +33,7 @@
               <line x1="16" y1="13" x2="8" y2="13"/>
               <line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
-            <span>Deskripsi</span>
+            <span>{{ t('detail.tab_desc') }}</span>
           </button>
 
           <button 
@@ -45,7 +45,7 @@
               <circle cx="12" cy="12" r="10"/>
               <circle cx="12" cy="12" r="3"/>
             </svg>
-            <span>Rilis &amp; Discography</span>
+            <span>{{ t('section.discography') }}</span>
           </button>
 
           <button 
@@ -56,7 +56,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
-            <span>Kontak &amp; Booking</span>
+            <span>{{ langState.current === 'en' ? 'Contact & Booking' : 'Kontak & Booking' }}</span>
           </button>
 
           <button 
@@ -70,7 +70,7 @@
               <line x1="8" y1="2" x2="8" y2="6"/>
               <line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
-            <span>Jadwal Tur Mendatang</span>
+            <span>{{ t('section.artist_tours') }}</span>
           </button>
         </div>
       </div>
@@ -92,7 +92,7 @@
                   <line x1="16" y1="17" x2="8" y2="17"/>
                 </svg>
               </div>
-              <h3 class="section-block-title">Deskripsi &amp; Biografi {{ artist.name }}</h3>
+              <h3 class="section-block-title">{{ langState.current === 'en' ? `Biography & Details - ${artist.name}` : `Deskripsi & Biografi ${artist.name}` }}</h3>
             </div>
 
             <div class="artist-bio-text text-left">
@@ -108,7 +108,7 @@
                 class="read-more-toggle-btn" 
                 @click="isBioExpanded = !isBioExpanded"
               >
-                <span>{{ isBioExpanded ? 'Tampilkan Lebih Sedikit' : 'Baca Selengkapnya' }}</span>
+                <span>{{ isBioExpanded ? (langState.current === 'en' ? 'Show Less' : 'Tampilkan Lebih Sedikit') : t('detail.read_more') }}</span>
                 <svg :class="{ 'rotate-180': isBioExpanded }" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -119,15 +119,15 @@
             <div class="stats-row-grid">
               <div class="stat-card">
                 <span class="stat-num">{{ artist.genre || 'Hardcore' }}</span>
-                <span class="stat-label">Genre Musik</span>
+                <span class="stat-label">Genre</span>
               </div>
               <div class="stat-card">
                 <span class="stat-num">{{ artist.origin || 'NYC, USA' }}</span>
-                <span class="stat-label">Kota Asal</span>
+                <span class="stat-label">{{ langState.current === 'en' ? 'Hometown' : 'Kota Asal' }}</span>
               </div>
               <div class="stat-card">
-                <span class="stat-num">{{ artistTours.length }} Tur</span>
-                <span class="stat-label">Jadwal Tur Mendatang</span>
+                <span class="stat-num">{{ artistTours.length }} {{ langState.current === 'en' ? 'Tours' : 'Tur' }}</span>
+                <span class="stat-label">{{ t('section.artist_tours') }}</span>
               </div>
             </div>
           </section>
@@ -216,6 +216,7 @@ import { useRoute } from 'vue-router'
 import TourCard from '../components/TourCard.vue'
 import VinylCard from '../components/VinylCard.vue'
 import Footer from '../components/Footer.vue'
+import { langState, t } from '../store/langState.js'
 
 const route = useRoute()
 const mainTab = ref('deskripsi')

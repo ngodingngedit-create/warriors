@@ -2,7 +2,7 @@
   <div class="artists-page">
     <section class="section">
       <div class="container">
-        <h2 class="section-title">Artist</h2>
+        <h2 class="section-title">{{ t('artists.title') }}</h2>
         <div class="artists-grid">
           <router-link
             v-for="artist in visibleArtists"
@@ -28,7 +28,7 @@
         </div>
 
         <div class="text-center mt-3" v-if="showCount < artists.length">
-          <button class="btn btn-outline btn-lg" @click="showCount = artists.length">View All Artists</button>
+          <button class="btn btn-outline btn-lg" @click="showCount = artists.length">{{ t('common.view_all_artists') }}</button>
         </div>
       </div>
     </section>
@@ -40,6 +40,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Footer from '../components/Footer.vue'
+import { t } from '../store/langState.js'
 
 const artists = [
   { id: 1, name: 'Teflon Dons', genre: 'Hardcore Punk', image: 'https://mad-tourbooking.de/media/Red-Light-Final-scaled-e1784117912711-900x495.png' },

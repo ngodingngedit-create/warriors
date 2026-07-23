@@ -12,23 +12,23 @@
             <h1 class="event-title" v-html="formattedTitle(tour.title)"></h1>
           </div>
           <div class="countdown-area">
-            <span class="countdown-lbl">EVENT DIMULAI DALAM</span>
+            <span class="countdown-lbl">{{ t('detail.event_starts_in') }}</span>
             <div class="countdown-timer">
               <div class="timer-box">
                 <span class="num">{{ countdown.days }}</span>
-                <span class="label">Hari</span>
+                <span class="label">{{ t('detail.days') }}</span>
               </div>
               <div class="timer-box">
                 <span class="num">{{ countdown.hours }}</span>
-                <span class="label">Jam</span>
+                <span class="label">{{ t('detail.hours') }}</span>
               </div>
               <div class="timer-box">
                 <span class="num">{{ countdown.minutes }}</span>
-                <span class="label">Menit</span>
+                <span class="label">{{ t('detail.minutes') }}</span>
               </div>
               <div class="timer-box">
                 <span class="num">{{ countdown.seconds }}</span>
-                <span class="label">Detik</span>
+                <span class="label">{{ t('detail.seconds') }}</span>
               </div>
             </div>
           </div>
@@ -86,10 +86,10 @@
                   </div>
                 </div>
                 <div class="org-text-meta">
-                  <span class="org-lbl">Diselenggarakan oleh</span>
+                  <span class="org-lbl">{{ t('detail.organized_by') }}</span>
                   <span class="org-name-val">{{ tour.creator || 'WARRIORS' }}</span>
                 </div>
-                <button class="simple-share-btn" @click="handleShare" title="Bagikan Event">
+                <button class="simple-share-btn" @click="handleShare" :title="t('detail.share_event')">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="18" cy="5" r="3"/>
                     <circle cx="6" cy="12" r="3"/>
@@ -103,7 +103,7 @@
 
             <!-- Bottom Action Cards matching reference image -->
             <div class="info-action-bar-card">
-              <button class="action-card-btn" @click="handleShare" title="Bagikan Event">
+              <button class="action-card-btn" @click="handleShare" :title="t('detail.share_event')">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="18" cy="5" r="3"/>
                   <circle cx="6" cy="12" r="3"/>
@@ -112,7 +112,7 @@
                   <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
                 </svg>
               </button>
-              <button class="action-card-btn" @click="handleChat" title="Hubungi Organizer">
+              <button class="action-card-btn" @click="handleChat" :title="t('detail.contact_organizer')">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                   <line x1="8" y1="9" x2="16" y2="9"/>
@@ -136,7 +136,7 @@
             :ref="(el) => setTabRef(el, 'deskripsi')"
             @click="scrollToSection('deskripsi')"
           >
-            Deskripsi
+            {{ t('detail.tab_desc') }}
           </button>
           <button 
             class="nav-tab-btn" 
@@ -144,7 +144,7 @@
             :ref="(el) => setTabRef(el, 'tiket')"
             @click="scrollToSection('tiket')"
           >
-            Tanggal
+            {{ t('detail.tab_dates') }}
           </button>
           <button 
             class="nav-tab-btn" 
@@ -152,7 +152,7 @@
             :ref="(el) => setTabRef(el, 'lokasi')"
             @click="scrollToSection('lokasi')"
           >
-            Lokasi
+            {{ t('detail.tab_location') }}
           </button>
           <button 
             class="nav-tab-btn" 
@@ -160,7 +160,7 @@
             :ref="(el) => setTabRef(el, 'ketentuan')"
             @click="scrollToSection('ketentuan')"
           >
-            Syarat &amp; Ketentuan
+            {{ t('detail.tab_terms') }}
           </button>
           <div class="tab-indicator" :style="indicatorStyle"></div>
         </div>
@@ -176,11 +176,11 @@
                 <line x1="16" y1="13" x2="8" y2="13"/>
                 <line x1="16" y1="17" x2="8" y2="17"/>
               </svg>
-              Deskripsi
+              {{ t('detail.tab_desc') }}
             </h2>
             <div class="section-content html-content" :class="{ 'desc-collapsed': !descExpanded }" v-html="tour.description"></div>
             <button class="read-more-btn" @click="toggleDesc">
-              {{ descExpanded ? 'Tutup' : 'Baca Selengkapnya' }}
+              {{ descExpanded ? t('detail.close') : t('detail.read_more') }}
               <svg :class="{ rotated: descExpanded }" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="18 15 12 9 6 15"/>
               </svg>
@@ -196,18 +196,18 @@
                 <path d="m9 6 3-3 3 3"/>
                 <rect x="3" y="6" width="18" height="6" rx="1"/>
               </svg>
-              Pilih Tanggal
+              {{ t('detail.select_date') }}
             </h2>
             <div class="section-content">
               <div class="dates-table-wrapper">
                 <table class="dates-table">
                   <thead>
                     <tr>
-                      <th>Date</th>
-                      <th>City</th>
-                      <th>Venue</th>
+                      <th>{{ t('dates.table_date') }}</th>
+                      <th>{{ t('common.location') }}</th>
+                      <th>{{ t('common.venue') }}</th>
                       <th>Country</th>
-                      <th>Tiket</th>
+                      <th>{{ t('dates.table_action') }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -217,7 +217,7 @@
                       <td class="venue-cell">{{ tour.venue_name }}</td>
                       <td class="country-cell">{{ tour.location_country }}</td>
                       <td class="ticket-cell">
-                        <button class="btn btn-gold btn-sm" @click="handleCheckout">Beli Tiket</button>
+                        <button class="btn btn-gold btn-sm" @click="handleCheckout">{{ t('common.buy_tickets') }}</button>
                       </td>
                     </tr>
                   </tbody>
@@ -233,7 +233,7 @@
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                 <circle cx="12" cy="10" r="3"/>
               </svg>
-              Lokasi
+              {{ t('detail.tab_location') }}
             </h2>
             <div class="section-content">
               <div class="lokasi-detail">
@@ -246,7 +246,7 @@
                 </div>
                 <a :href="tour.map_link" target="_blank" class="maps-btn">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Lihat di Google Maps
+                  {{ t('detail.view_maps') }}
                 </a>
               </div>
             </div>
@@ -259,7 +259,7 @@
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                 <polyline points="22 4 12 14.01 9 11.01"/>
               </svg>
-              Syarat &amp; Ketentuan
+              {{ t('detail.tab_terms') }}
             </h2>
             <div class="section-content">
               <div class="html-content" v-html="tour.term_condition"></div>
@@ -417,6 +417,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import { langState, t } from '../store/langState.js'
 
 const route = useRoute()
 const tour = ref(null)
@@ -535,42 +536,64 @@ const mockMerchandise = [
   { id: 'm3', name: 'Exclusive Tote Bag', image: 'https://images.unsplash.com/photo-1544816153-39ad0350b51c?q=80&w=150&h=150&auto=format&fit=crop' }
 ]
 
-const dummyTermsSections = [
-  {
-    title: 'Aturan Umum',
-    items: [
-      'Pembelian seluruh tiket dan layanan di Warriors bersifat final. Seluruh transaksi yang telah berhasil tidak dapat dikembalikan (refund) maupun ditukar dalam bentuk apapun.',
-      'Dengan melakukan pembelian tiket melalui platform Warriors, Pengunjung menyatakan telah membaca, memahami, dan menyetujui Syarat & Ketentuan Penggunaan Layanan Warriors.',
-      'Dengan menghadiri event yang terdaftar di Warriors, Pengunjung dianggap menyetujui bahwa dokumentasi kegiatan yang melibatkan Pengunjung dapat digunakan dan dipublikasikan oleh penyelenggara ke media sosial untuk keperluan dokumentasi dan/atau promosi.',
-      'Apabila Pengunjung mengalami kendala terkait pemesanan, silakan menghubungi Customer Service Warriors via WhatsApp.'
-    ]
-  },
-  {
-    title: 'Aturan & Tata Cara Menghadiri Event',
-    items: [
-      'Setelah berhasil mendaftar, Pengunjung akan mendapat e-tiket resmi melalui email.',
-      'Konfirmasi Tiket berisikan rincian pembayaran dan e-tiket dari Warriors, akan langsung dikirimkan ke email terdaftar setelah pembayaran berhasil.',
-      'Informasi Tambahan berisikan jadwal event, tautan panduan akses, serta link grup komunikasi (jika ada). Email akan dikirim paling lambat 2x24 jam sejak pembayaran berhasil.',
-      'Link Akses Masuk berisikan barcode scan fisik atau tautan online untuk bergabung ke event. Harap simpan barcode Anda dengan baik untuk proses check-in di lokasi.',
-      'Periksa inbox/spam/junk email Anda secara berkala! Segera hubungi Customer Service Warriors apabila belum menerima email konfirmasi tiket.'
-    ]
-  },
-  {
-    title: 'Persiapan Sebelum Event',
-    items: [
-      'Event dapat diselenggarakan offline atau online. Pengunjung wajib menginstal aplikasi pendukung (jika online) atau membawa e-ticket resmi (jika offline) sebelum acara dimulai.',
-      'Pengunjung wajib melakukan verifikasi masuk menggunakan alamat email yang terdaftar saat pembelian tiket.',
-      'Satu e-ticket hanya berlaku untuk satu orang pengunjung.',
-      'Satu tautan streaming online hanya dapat digunakan pada satu perangkat secara bersamaan.',
-      'Pengunjung dilarang keras menyebarluaskan barcode e-ticket, link streaming, atau materi eksklusif event kepada pihak manapun. Segala kerugian akibat kelalaian Pengunjung bukan merupakan tanggung jawab Warriors.'
-    ]
-  }
-]
+const dummyTermsSections = computed(() => {
+  const isEn = langState.current === 'en'
+  return [
+    {
+      title: isEn ? 'General Rules' : 'Aturan Umum',
+      items: isEn ? [
+        'All ticket and service purchases at Warriors are final. Successful transactions cannot be refunded or exchanged in any form.',
+        'By purchasing tickets through the Warriors platform, Visitors declare that they have read, understood, and agreed to the Warriors Terms of Service.',
+        'By attending events listed on Warriors, Visitors agree that event documentation featuring them may be used and published by the organizer on social media for documentation and promotion.',
+        'If Visitors experience issues regarding orders, please contact Warriors Customer Service via WhatsApp.'
+      ] : [
+        'Pembelian seluruh tiket dan layanan di Warriors bersifat final. Seluruh transaksi yang telah berhasil tidak dapat dikembalikan (refund) maupun ditukar dalam bentuk apapun.',
+        'Dengan melakukan pembelian tiket melalui platform Warriors, Pengunjung menyatakan telah membaca, memahami, dan menyetujui Syarat & Ketentuan Penggunaan Layanan Warriors.',
+        'Dengan menghadiri event yang terdaftar di Warriors, Pengunjung dianggap menyetujui bahwa dokumentasi kegiatan yang melibatkan Pengunjung dapat digunakan dan dipublikasikan oleh penyelenggara ke media sosial untuk keperluan dokumentasi dan/atau promosi.',
+        'Apabila Pengunjung mengalami kendala terkait pemesanan, silakan menghubungi Customer Service Warriors via WhatsApp.'
+      ]
+    },
+    {
+      title: isEn ? 'Event Attendance Rules & Guidelines' : 'Aturan & Tata Cara Menghadiri Event',
+      items: isEn ? [
+        'After successful registration, Visitors will receive an official e-ticket via email.',
+        'Ticket Confirmation containing payment details and e-tickets from Warriors will be sent immediately to the registered email after successful payment.',
+        'Additional Info contains event schedule, access guide links, and communication group links (if any). Emails will be sent no later than 2x24 hours after payment.',
+        'Entry Access Link contains physical barcode scan or online streaming link to join the event. Please keep your barcode safe for on-site check-in.',
+        'Check your inbox/spam/junk email regularly! Contact Warriors Customer Service immediately if you have not received your confirmation email.'
+      ] : [
+        'Setelah berhasil mendaftar, Pengunjung akan mendapat e-tiket resmi melalui email.',
+        'Konfirmasi Tiket berisikan rincian pembayaran dan e-tiket dari Warriors, akan langsung dikirimkan ke email terdaftar setelah pembayaran berhasil.',
+        'Informasi Tambahan berisikan jadwal event, tautan panduan akses, serta link grup komunikasi (jika ada). Email akan dikirim paling lambat 2x24 jam sejak pembayaran berhasil.',
+        'Link Akses Masuk berisikan barcode scan fisik atau tautan online untuk bergabung ke event. Harap simpan barcode Anda dengan baik untuk proses check-in di lokasi.',
+        'Periksa inbox/spam/junk email Anda secara berkala! Segera hubungi Customer Service Warriors apabila belum menerima email konfirmasi tiket.'
+      ]
+    },
+    {
+      title: isEn ? 'Preparation Before Event' : 'Persiapan Sebelum Event',
+      items: isEn ? [
+        'Events can be held offline or online. Visitors are required to install supporting apps (if online) or bring official e-tickets (if offline) before the event starts.',
+        'Visitors are required to verify entry using the email address registered during ticket purchase.',
+        'One e-ticket is valid for one visitor only.',
+        'One online streaming link can only be used on one device simultaneously.',
+        'Visitors are strictly prohibited from sharing e-ticket barcodes, streaming links, or exclusive event content with any party. Warriors is not responsible for losses caused by Visitor negligence.'
+      ] : [
+        'Event dapat diselenggarakan offline atau online. Pengunjung wajib menginstal aplikasi pendukung (jika online) atau membawa e-ticket resmi (jika offline) sebelum acara dimulai.',
+        'Pengunjung wajib melakukan verifikasi masuk menggunakan alamat email yang terdaftar saat pembelian tiket.',
+        'Satu e-ticket hanya berlaku untuk satu orang pengunjung.',
+        'Satu tautan streaming online hanya dapat digunakan pada satu perangkat secara bersamaan.',
+        'Pengunjung dilarang keras menyebarluaskan barcode e-ticket, link streaming, atau materi eksklusif event kepada pihak manapun. Segala kerugian akibat kelalaian Pengunjung bukan merupakan tanggung jawab Warriors.'
+      ]
+    }
+  ]
+})
 
 const getDayName = (dateStr) => {
-  const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+  const isEn = langState.current === 'en'
+  const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const daysId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
   const d = new Date(dateStr)
-  return days[d.getDay()]
+  return isEn ? daysEn[d.getDay()] : daysId[d.getDay()]
 }
 
 const getFormattedDate = (dateStr) => {
@@ -582,8 +605,8 @@ const getFormattedDate = (dateStr) => {
 }
 
 const formatPrice = (price) => {
-  if (price === 0) return 'Gratis'
-  return new Intl.NumberFormat('id-ID', {
+  if (price === 0) return langState.current === 'en' ? 'Free' : 'Gratis'
+  return new Intl.NumberFormat(langState.current === 'en' ? 'en-US' : 'id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0
@@ -601,9 +624,10 @@ const getStatusClass = (tkt) => {
 }
 
 const getStatusLabel = (tkt) => {
+  const isEn = langState.current === 'en'
   if (tkt.is_soldout) return 'SOLD OUT'
-  if (tkt.is_finish) return 'Penjualan Berakhir'
-  return 'PENJUALAN BERLANGSUNG'
+  if (tkt.is_finish) return isEn ? 'SALE ENDED' : 'Penjualan Berakhir'
+  return isEn ? 'ON SALE NOW' : 'PENJUALAN BERLANGSUNG'
 }
 
 const toggleTicketExpand = (tktId) => {

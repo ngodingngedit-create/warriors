@@ -1,17 +1,17 @@
 <template>
   <footer class="site-footer">
     <div class="footer-content">
-      <span class="promoted-by">PROMOTED BY</span>
+      <span class="promoted-by">{{ t('footer.promoted_by') }}</span>
       <div class="logo-container">
         <img src="/images/logo-warriors-white.png" alt="Warriors" class="footer-logo" />
       </div>
-      <span class="copyright">&copy; 2026 M.A.D. TOURBOOKING. ALL RIGHTS RESERVED</span>
+      <span class="copyright">{{ t('footer.copyright') }}</span>
     </div>
   </footer>
 </template>
 
 <script setup>
-// Minimalist promoter footer layout
+import { t } from '../store/langState.js'
 </script>
 
 <style scoped>

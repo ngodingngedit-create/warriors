@@ -3,7 +3,7 @@
     <section class="section dates-section">
       <div class="container">
         <div class="dates-page-header">
-          <h2 class="section-title">Tour Dates</h2>
+          <h2 class="section-title">{{ t('dates.title') }}</h2>
         </div>
 
         <!-- Year Filter -->
@@ -21,11 +21,11 @@
           <table class="dates-table">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>City</th>
-                <th>Venue</th>
+                <th>{{ t('dates.table_date') }}</th>
+                <th>{{ t('common.location') }}</th>
+                <th>{{ t('common.venue') }}</th>
                 <th>Country</th>
-                <th>Tickets</th>
+                <th>{{ t('dates.table_action') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -35,10 +35,10 @@
                 <td class="venue-cell">{{ date.venue }}</td>
                 <td class="country-cell">{{ date.country }}</td>
                 <td class="ticket-cell">
-                  <router-link v-if="date.tourId" :to="`/tours/${date.tourId}`" class="btn btn-gold btn-sm">Tickets</router-link>
+                  <router-link v-if="date.tourId" :to="`/tours/${date.tourId}`" class="btn btn-gold btn-sm">{{ t('common.buy_tickets') }}</router-link>
                   <span v-else class="no-tickets">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    Sold Out
+                    {{ t('card.sold_out') }}
                   </span>
                 </td>
               </tr>
@@ -55,6 +55,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Footer from '../components/Footer.vue'
+import { t } from '../store/langState.js'
 
 const allDates = [
   { date: '05.08.2026', city: 'Birmingham', venue: 'The Flapper', country: 'United Kingdom', tourId: 1 },

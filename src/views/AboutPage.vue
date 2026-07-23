@@ -1,9 +1,9 @@
 <template>
   <div class="about-page">
     <HeroSection
-      title="About Warriors"
-      subtitle="Pioneers of hardcore punk & metal booking since 1990"
-      badge="Since 1990"
+      :title="t('about.title')"
+      :subtitle="t('about.subtitle')"
+      :badge="t('hero.badge')"
       background="https://mad-tourbooking.de/media/slider-16-color.jpg"
     />
 
@@ -11,12 +11,11 @@
       <div class="container">
         <div class="about-content">
           <div class="about-text">
-            <h2 class="section-title">Our Story</h2>
-            <p>M.A.D. Tourbooking has been at the forefront of hardcore punk and metal booking since 1990. With over three decades of experience, we have established ourselves as one of the most respected booking agencies in the underground music scene.</p>
-            <p>Based in Berlin, Germany, we represent a diverse roster of artists spanning hardcore punk, metal, death metal, thrash, and everything in between. From legendary acts that have shaped the genre to exciting new bands carrying the torch forward, M.A.D. is proud to work with the best in the business.</p>
-            <p>Our annual events including the Campaign For Musical Destruction Tour, Punk & Disorderly Fest, Hell On Earth Tour, and Persistence Tour have become legendary fixtures in the European touring calendar.</p>
+            <h2 class="section-title">{{ langState.current === 'en' ? 'Our Story' : 'Kisah Kami' }}</h2>
+            <p>{{ langState.current === 'en' ? 'M.A.D. Tourbooking has been at the forefront of hardcore punk and metal booking since 1990. With over three decades of experience, we have established ourselves as one of the most respected booking agencies in the underground music scene.' : 'M.A.D. Tourbooking telah berada di garda terdepan booking hardcore punk dan metal sejak tahun 1990. Dengan pengalaman lebih dari tiga dekade, kami telah mengukuhkan diri sebagai salah satu agensi booking paling dihormati di kancah musik underground.' }}</p>
+            <p>{{ langState.current === 'en' ? 'Based in Berlin, Germany, we represent a diverse roster of artists spanning hardcore punk, metal, death metal, thrash, and everything in between.' : 'Berbasis di Berlin, Jerman, kami mewakili jajaran artis yang beragam mulai dari hardcore punk, metal, death metal, thrash, dan semua di antaranya.' }}</p>
 
-            <h3 class="mt-3">What We Do</h3>
+            <h3 class="mt-3">{{ langState.current === 'en' ? 'What We Do' : 'Layanan Kami' }}</h3>
             <div class="services-grid">
               <div v-for="service in services" :key="service.title" class="service-card">
                 <div class="service-icon">{{ service.icon }}</div>
@@ -44,10 +43,10 @@
     <!-- Contact -->
     <section class="section section-alt">
       <div class="container">
-        <h2 class="section-title">Get In Touch</h2>
+        <h2 class="section-title">{{ langState.current === 'en' ? 'Get In Touch' : 'Hubungi Kami' }}</h2>
         <div class="contact-grid">
           <div class="contact-info">
-            <h3>Contact Information</h3>
+            <h3>{{ langState.current === 'en' ? 'Contact Information' : 'Informasi Kontak' }}</h3>
             <ul class="contact-list">
               <li>
                 <strong>Email:</strong>
@@ -57,25 +56,27 @@
                 <strong>Location:</strong>
                 Berlin, Germany
               </li>
-              <li>
-                <strong>Social:</strong>
-              </li>
             </ul>
-            <SocialLinks direction="horizontal" colorScheme="dark" />
+            <div class="social-links-wrapper">
+              <h4>Follow Us</h4>
+              <SocialLinks />
+            </div>
           </div>
+
           <div class="contact-form-wrapper">
-            <h3>Send Us a Message</h3>
-            <form class="contact-form" @submit.prevent="submitForm">
+            <h3>{{ langState.current === 'en' ? 'Send Us a Message' : 'Kirim Pesan' }}</h3>
+            <form @submit.prevent="handleSubmit" class="contact-form">
               <div class="form-row">
-                <input v-model="form.name" type="text" placeholder="Your Name" class="form-input" required />
+                <input v-model="form.name" type="text" :placeholder="langState.current === 'en' ? 'Your Name' : 'Nama Anda'" class="form-input" required />
+                <input v-model="form.email" type="email" :placeholder="langState.current === 'en' ? 'Your Email' : 'Email Anda'" class="form-input" required />
               </div>
               <div class="form-row">
-                <input v-model="form.email" type="email" placeholder="Your Email" class="form-input" required />
+                <input v-model="form.subject" type="text" :placeholder="langState.current === 'en' ? 'Subject' : 'Subjek'" class="form-input" required />
               </div>
               <div class="form-row">
-                <textarea v-model="form.message" placeholder="Your Message" class="form-input form-textarea" rows="5" required></textarea>
+                <textarea v-model="form.message" :placeholder="langState.current === 'en' ? 'Your Message' : 'Pesan Anda'" class="form-input form-textarea" rows="5" required></textarea>
               </div>
-              <button type="submit" class="btn btn-gold btn-lg">Send Message</button>
+              <button type="submit" class="btn btn-gold btn-lg">{{ langState.current === 'en' ? 'Send Message' : 'Kirim Pesan' }}</button>
             </form>
           </div>
         </div>
@@ -91,6 +92,7 @@ import { ref } from 'vue'
 import HeroSection from '../components/HeroSection.vue'
 import SocialLinks from '../components/SocialLinks.vue'
 import Footer from '../components/Footer.vue'
+import { langState, t } from '../store/langState.js'
 
 const services = [
   { icon: '🎵', title: 'Tour Booking', description: 'Full-service tour booking and management for hardcore punk and metal bands across Europe and worldwide.' },

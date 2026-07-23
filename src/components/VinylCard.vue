@@ -33,6 +33,7 @@
 
 <script setup>
 import { cartState } from '../store/cartState.js'
+import { langState } from '../store/langState.js'
 
 const props = defineProps({
   vinyl: {
@@ -42,8 +43,8 @@ const props = defineProps({
 })
 
 const formatPrice = (price) => {
-  if (price === 0 || !price) return 'Gratis'
-  return new Intl.NumberFormat('id-ID', {
+  if (price === 0 || !price) return langState.current === 'en' ? 'Free' : 'Gratis'
+  return new Intl.NumberFormat(langState.current === 'en' ? 'en-US' : 'id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0

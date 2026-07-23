@@ -3,7 +3,7 @@
     <section class="section tours-section">
       <div class="container">
         <div class="tours-header">
-          <h2 class="section-title">All Tours</h2>
+          <h2 class="section-title">{{ t('tours.title') }}</h2>
         </div>
 
         <!-- Year Filter -->
@@ -31,6 +31,7 @@
 import { ref, computed } from 'vue'
 import TourCard from '../components/TourCard.vue'
 import Footer from '../components/Footer.vue'
+import { t } from '../store/langState.js'
 
 const allTours = [
   {

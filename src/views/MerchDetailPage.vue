@@ -36,7 +36,7 @@
           <div class="info-col">
             <div class="product-info">
               <h1 class="product-title">{{ product.title }}</h1>
-              <div class="sold-text">Terjual {{ product.sold }} pcs</div>
+              <div class="sold-text">{{ langState.current === 'en' ? `${product.sold} pcs sold` : `Terjual ${product.sold} pcs` }}</div>
               <div class="product-price">{{ formatPrice(product.price) }}</div>
             </div>
 
@@ -55,7 +55,7 @@
 
             <!-- Variant Selector -->
             <div class="variant-section">
-              <div class="variant-label">Pilih Ukuran / Edisi : <strong>{{ selectedVariant }}</strong></div>
+              <div class="variant-label">{{ langState.current === 'en' ? 'Select Size / Edition' : 'Pilih Ukuran / Edisi' }} : <strong>{{ selectedVariant }}</strong></div>
               <div class="variant-buttons">
                 <button
                   v-for="variant in variants"
@@ -72,19 +72,19 @@
             <!-- Description & Review Tabs -->
             <div class="tabs-section">
               <div class="tabs-header">
-                <button class="tab-btn" :class="{ active: activeTab === 'deskripsi' }" @click="activeTab = 'deskripsi'">Deskripsi Produk</button>
-                <button class="tab-btn" :class="{ active: activeTab === 'ulasan' }" @click="activeTab = 'ulasan'">Ulasan ({{ product.reviews }})</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'deskripsi' }" @click="activeTab = 'deskripsi'">{{ langState.current === 'en' ? 'Product Description' : 'Deskripsi Produk' }}</button>
+                <button class="tab-btn" :class="{ active: activeTab === 'ulasan' }" @click="activeTab = 'ulasan'">{{ langState.current === 'en' ? `Reviews (${product.reviews})` : `Ulasan (${product.reviews})` }}</button>
               </div>
               <div class="tabs-content">
                 <div v-if="activeTab === 'deskripsi'" class="tab-panel">
                   <p class="desc-text">{{ product.description }}</p>
-                  <h4 class="detail-heading">Detail Spesifikasi :</h4>
+                  <h4 class="detail-heading">{{ langState.current === 'en' ? 'Specification Details :' : 'Detail Spesifikasi :' }}</h4>
                   <ul class="detail-list">
                     <li v-for="(item, idx) in product.details" :key="idx">{{ item }}</li>
                   </ul>
                 </div>
                 <div v-else class="tab-panel">
-                  <p class="empty-text">Belum ada ulasan untuk produk ini.</p>
+                  <p class="empty-text">{{ langState.current === 'en' ? 'No reviews for this product yet.' : 'Belum ada ulasan untuk produk ini.' }}</p>
                 </div>
               </div>
             </div>
@@ -95,8 +95,8 @@
             <div class="order-panel">
               <div class="qty-section">
                 <div class="qty-header">
-                  <span class="qty-label">Jumlah</span>
-                  <span class="stock-text">Stok {{ product.stock }}</span>
+                  <span class="qty-label">{{ t('cart.quantity') }}</span>
+                  <span class="stock-text">{{ langState.current === 'en' ? `Stock ${product.stock}` : `Stok ${product.stock}` }}</span>
                 </div>
                 <div class="qty-controls">
                   <button class="qty-btn" @click="quantity > 1 && quantity--" :disabled="quantity <= 1">−</button>
@@ -113,9 +113,9 @@
               <div class="order-actions">
                 <button class="btn-add-cart" @click="handleAddToCart">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Tambah Keranjang
+                  {{ t('common.add_to_cart') }}
                 </button>
-                <button class="btn-buy-now" @click="handleBuyNow">Beli Sekarang</button>
+                <button class="btn-buy-now" @click="handleBuyNow">{{ t('common.buy_now') }}</button>
               </div>
             </div>
           </div>
@@ -132,6 +132,7 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { cartState } from '../store/cartState.js'
 import Footer from '../components/Footer.vue'
+import { langState, t } from '../store/langState.js'
 
 const route = useRoute()
 
@@ -144,6 +145,7 @@ const selectedVariant = ref('L')
 const variants = ['S', 'M', 'L', 'XL', 'XXL']
 
 const product = computed(() => {
+  const isEn = langState.current === 'en'
   const paramId = parseInt(route.params.id) || 201
   return {
     id: paramId,
@@ -154,13 +156,22 @@ const product = computed(() => {
     reviews: 18,
     creator: 'Warriors Official',
     coverImage: 'https://mad-tourbooking.de/media/Red-Light-Final-scaled-e1784117912711-900x495.png',
-    description: 'Merchandise t-shirt resmi dibuat dari bahan 100% Premium Heavyweight Cotton 24s. Cetakan sablon plastisol tahan lama dengan detail presisi tinggi, sangat nyaman digunakan untuk acara konser maupun harian.',
-    details: [
-      'Bahan: 100% Heavy Cotton 24s High Quality',
-      'Sablon: Premium High-Density Plastisol Ink',
-      'Fit: Regular Fit European Sizing',
-      'Jahitan: Double Needle Stitching & Rantai Leher'
-    ]
+    description: isEn
+      ? 'Official band merch t-shirt crafted from 100% Premium Heavyweight Cotton 24s. Long-lasting plastisol screen print with high precision detail, extremely comfortable for concert and daily wear.'
+      : 'Merchandise t-shirt resmi dibuat dari bahan 100% Premium Heavyweight Cotton 24s. Cetakan sablon plastisol tahan lama dengan detail presisi tinggi, sangat nyaman digunakan untuk acara konser maupun harian.',
+    details: isEn
+      ? [
+          'Material : 100% High Quality 24s Heavy Cotton',
+          'Screenprint : Premium High-Density Plastisol Ink',
+          'Fit : Regular Fit European Sizing',
+          'Stitching : Double Needle Stitching & Chain Taped Neck'
+        ]
+      : [
+          'Bahan: 100% Heavy Cotton 24s High Quality',
+          'Sablon: Premium High-Density Plastisol Ink',
+          'Fit: Regular Fit European Sizing',
+          'Jahitan: Double Needle Stitching & Rantai Leher'
+        ]
   }
 })
 
@@ -175,8 +186,8 @@ const prevThumb = () => { if (thumbOffset.value > 0) thumbOffset.value-- }
 const nextThumb = () => { if (thumbOffset.value < images.value.length - 4) thumbOffset.value++ }
 
 const formatPrice = (price) => {
-  if (!price) return 'Gratis'
-  return new Intl.NumberFormat('id-ID', {
+  if (!price) return langState.current === 'en' ? 'Free' : 'Gratis'
+  return new Intl.NumberFormat(langState.current === 'en' ? 'en-US' : 'id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0

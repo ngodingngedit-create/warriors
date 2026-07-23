@@ -3,11 +3,11 @@
     <!-- Hero Slider -->
     <HeroSection
       title="WARRIORS"
-      subtitle="Pioneers of hardcore punk &amp; metal booking Since 1983"
-      badge="Since 1990"
+      :subtitle="t('hero.subtitle')"
+      :badge="t('hero.badge')"
       :buttons="[
-        { label: 'View All Tours', link: '/tours', variant: 'btn-primary btn-lg' },
-        { label: 'View All Dates', link: '/dates', variant: 'btn-outline-light btn-lg' }
+        { label: t('hero.btn_tours'), link: '/tours', variant: 'btn-primary btn-lg' },
+        { label: t('hero.btn_dates'), link: '/dates', variant: 'btn-outline-light btn-lg' }
       ]"
     />
 
@@ -17,13 +17,13 @@
     <!-- All Tours -->
     <section class="section">
       <div class="container">
-        <h2 class="section-title">All Tours</h2>
+        <h2 class="section-title">{{ t('section.all_tours') }}</h2>
         <div class="grid grid-4 tours-grid">
           <TourCard v-for="tour in allHomeTours" :key="tour.id" :tour="tour" />
         </div>
         <div class="home-action-buttons">
-          <router-link to="/tours" class="btn btn-outline btn-lg">View All Tours</router-link>
-          <router-link to="/dates" class="btn btn-outline btn-lg">View All Tour Dates</router-link>
+          <router-link to="/tours" class="btn btn-outline btn-lg">{{ t('common.view_all_tours') }}</router-link>
+          <router-link to="/dates" class="btn btn-outline btn-lg">{{ t('common.view_all_dates') }}</router-link>
         </div>
       </div>
     </section>
@@ -31,12 +31,12 @@
     <!-- Vinyl Records -->
     <section class="section section-alt">
       <div class="container">
-        <h2 class="section-title">Vinyl Records</h2>
+        <h2 class="section-title">{{ t('section.vinyl_records') }}</h2>
         <div class="grid grid-4 tours-grid">
           <VinylCard v-for="vinyl in vinylRecords" :key="vinyl.id" :vinyl="vinyl" />
         </div>
         <div class="text-center mt-3">
-          <router-link to="/revelations/merch/vinyl" class="btn btn-outline btn-lg">View All Vinyl</router-link>
+          <router-link to="/revelations/merch/vinyl" class="btn btn-outline btn-lg">{{ t('common.view_all_vinyl') }}</router-link>
         </div>
       </div>
     </section>
@@ -44,7 +44,7 @@
     <!-- Featured Artists -->
     <section class="section">
       <div class="container">
-        <h2 class="section-title">Featured Artists</h2>
+        <h2 class="section-title">{{ t('section.featured_artists') }}</h2>
         <div class="artists-grid">
           <router-link
             v-for="artist in featuredArtists"
@@ -69,18 +69,10 @@
           </router-link>
         </div>
         <div class="text-center mt-3">
-          <router-link to="/artists" class="btn btn-outline btn-lg">View All Artists</router-link>
+          <router-link to="/artists" class="btn btn-outline btn-lg">{{ t('common.view_all_artists') }}</router-link>
         </div>
       </div>
     </section>
-
-    <!-- Festivals & Playlist -->
-    <!-- <section class="section section-alt">
-      <div class="container">
-        <div class="split-section">
-          <!-- Festival -->
-          
-
 
     <!-- Footer -->
     <Footer />
@@ -93,6 +85,7 @@ import VideoSection from '../components/VideoSection.vue'
 import TourCard from '../components/TourCard.vue'
 import VinylCard from '../components/VinylCard.vue'
 import Footer from '../components/Footer.vue'
+import { t } from '../store/langState.js'
 
 const allHomeTours = [
   {

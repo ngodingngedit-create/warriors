@@ -16,12 +16,12 @@
           class="auth-tab"
           :class="{ active: activeTab === 'login' }"
           @click="activeTab = 'login'"
-        >Masuk</button>
+        >{{ t('login.title') }}</button>
         <button
           class="auth-tab"
           :class="{ active: activeTab === 'register' }"
           @click="activeTab = 'register'"
-        >Daftar</button>
+        >{{ langState.current === 'en' ? 'Register' : 'Daftar' }}</button>
         <div class="auth-tab-indicator" :style="tabIndicatorStyle"></div>
       </div>
 
@@ -32,7 +32,7 @@
           {{ alertMessage }}
         </div>
         <div class="form-group">
-          <label for="login-email">Email</label>
+          <label for="login-email">{{ t('login.email') }}</label>
           <input
             id="login-email"
             v-model="loginForm.email"
@@ -44,7 +44,7 @@
         </div>
         <button class="btn-submit" @click="handleLogin" :disabled="loginLoading">
           <span v-if="loginLoading" class="btn-loader"></span>
-          <span v-else>Masuk</span>
+          <span v-else>{{ t('login.submit') }}</span>
         </button>
       </div>
 
@@ -99,6 +99,7 @@
 import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { login as setLoggedIn } from '../stores/auth.js'
+import { langState, t } from '../store/langState.js'
 
 const router = useRouter()
 
